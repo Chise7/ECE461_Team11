@@ -5,6 +5,7 @@
 from urllib.parse import urlparse
 from License import licenseScore
 import sys
+import json
 #import subprocess
 
 url = sys.argv[1]
@@ -18,17 +19,21 @@ url_split = urlparse(url).netloc.split('.')
 
 # If Parsed URL is from Github, returns Github to License
 if("github" in url_split):
-    print("Github")
     licenseName = licenseScore.githubLicense(url)
 elif("npmjs" in url_split):
-    print("NPM")
     licenseName = licenseScore.npmLicense(url)  
  
 # Get list of possible licenses
-#licenseList = licenseScore.getLicensesList()
+licenseList = licenseScore.getLicensesList()
 
 # Assigns a score according to the license
-#licenseScore.score(licenseList, licenseName)
+scoreLicense = licenseScore.score(licenseList, licenseName)
+jsonDict = {}
+for categories in ["scoreLicense"]:
+    jsonDict[categories] = eval(categories)
+    
+print(licenseName)
+print(json.dumps(jsonDict))
 
 # Run a Rust script with the subprocess library and necessary inputs
 # Assign the rust script output to output 

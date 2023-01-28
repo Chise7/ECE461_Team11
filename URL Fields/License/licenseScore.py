@@ -56,5 +56,11 @@ if __name__ == '__main__':
     # Software packages will receive a score of 1 if the license is GNU LGPL v2.1 as required by ACME
 
 def score(licenseList, licenseName):
-    #if(licenseName):
-    return
+    score = 0
+    if(licenseName in licenseList):
+        score = 0.25
+    if("GNU" in licenseName):
+        score = 0.5
+    if("v2.1" in licenseName):
+        score  = 1
+    return score
