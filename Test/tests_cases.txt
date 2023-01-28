@@ -1,2 +1,3 @@
-./run install
-./run build
+Test Inputs for License
+"https://www.npmjs.com/package/even"
+"https://github.com/jonschlinkert/even"
