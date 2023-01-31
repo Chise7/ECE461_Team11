@@ -8,7 +8,7 @@ Given in BS that works
 https://github.com/nullivex/nodist - MIT 
 https://www.npmjs.com/package/express - MIT
 https://www.npmjs.com/package/browserify - MIT
+https://github.com/cloudinary/cloudinary_npm - MIT 
 
 Given Inputs in BS that dont work
-https://github.com/cloudinary/cloudinary_npm error github 3. 
-https://github.com/lodash/lodash - other license ?? 1.
+https://github.com/lodash/lodash - Github API returns Other
