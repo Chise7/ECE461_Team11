@@ -1,5 +1,14 @@
-Test Inputs for License
-"https://www.npmjs.com/package/even" - MIT
-"https://github.com/jonschlinkert/even" - MIT
-"https://github.com/SonarSource/chocolatey-packages" - GNU v3.0
-"https://github.com/PSOPT/psopt" - GNU v2.1
+Test Inputs for License that work
+https://www.npmjs.com/package/even - MIT
+https://github.com/jonschlinkert/even - MIT
+https://github.com/SonarSource/chocolatey-packages - GNU v3.0
+https://github.com/PSOPT/psopt - GNU v2.1
+
+Given in BS that works
+https://github.com/nullivex/nodist - MIT 
+https://www.npmjs.com/package/express - MIT
+https://www.npmjs.com/package/browserify - MIT
+
+Given Inputs in BS that dont work
+https://github.com/cloudinary/cloudinary_npm error github 3. 
+https://github.com/lodash/lodash - other license ?? 1.

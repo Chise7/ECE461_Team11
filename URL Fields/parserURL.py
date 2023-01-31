@@ -9,25 +9,23 @@ import json
 #import subprocess
 
 url = sys.argv[1]
-# Test URLS for testing purposes
-#url1 = "https://www.npmjs.com/package/even"
-#url2 = "https://github.com/jonschlinkert/even"
 
 # Parse the URL to get to the absolute Webpage name
 url_split = urlparse(url).netloc.split('.')
 
-
-# If Parsed URL is from Github, returns Github to License
+# Calls Function for different API calls according to URL Domain
 if("github" in url_split):
     licenseName = licenseScore.githubLicense(url)
 elif("npmjs" in url_split):
     licenseName = licenseScore.npmLicense(url)  
  
-# Get list of possible licenses
+# Get list of possible licenses from Github
 licenseList = licenseScore.getLicensesList()
 
 # Assigns a score according to the license
 scoreLicense = licenseScore.score(licenseList, licenseName)
+
+# Outputs the Score in JSON Format
 jsonDict = {}
 for categories in ["scoreLicense"]:
     jsonDict[categories] = eval(categories)
