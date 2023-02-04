@@ -1,0 +1,20 @@
+cargo:rerun-if-env-changed=PYTHON_SYS_EXECUTABLE
+cargo:rerun-if-env-changed=CARGO_FEATURE_EXTENSION_MODULE
+cargo:rerun-if-env-changed=CARGO_FEATURE_LINK_MODE_DEFAULT
+cargo:rerun-if-env-changed=CARGO_FEATURE_LINK_MODE_UNRESOLVED_STATIC
+cargo:rustc-link-lib=pythonXY:python310
+cargo:rustc-link-search=native=C:\Program Files\Python310\libs
+cargo:rerun-if-env-changed=CARGO_FEATURE_PEP_384
+cargo:rustc-cfg=Py_3_4
+cargo:rustc-cfg=Py_3_5
+cargo:rustc-cfg=Py_3_6
+cargo:rustc-cfg=Py_3_7
+cargo:rustc-cfg=Py_3_8
+cargo:rustc-cfg=Py_3_9
+cargo:rustc-cfg=Py_3_10
+cargo:rustc-cfg=py_sys_config="Py_UNICODE_SIZE_2"
+
+cargo:rustc-cfg=py_sys_config="WITH_THREAD"
+cargo:rustc-cfg=py_sys_config="Py_USING_UNICODE"
+cargo:python_flags=VAL_Py_UNICODE_SIZE=2,FLAG_WITH_THREAD=1,FLAG_Py_USING_UNICODE=1
+cargo:python_interpreter=C:\Program Files\Python310\python.exe

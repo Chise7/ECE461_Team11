@@ -1,0 +1,4 @@
+/venv/
+/sample-files/
+/target/
+Cargo.lock
