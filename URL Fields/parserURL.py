@@ -1,41 +1,35 @@
-# To run the license files use this command with a github or npm link like this one:
-# Don't forget to add your Github Token on the licenseScore file
-# python parserURL.py https://github.com/jonschlinkert/even
-
 from urllib.parse import urlparse
 from License import licenseScore
+from Correctness import correctnessScore
 import sys
 import json
-#import subprocess
+
 
 url = sys.argv[1]
 
 # Parse the URL to get to the absolute Webpage name
 url_split = urlparse(url).netloc.split('.')
 
-# Calls Function for different API calls according to URL Domain
-if("github" in url_split):
-    licenseName = licenseScore.githubLicense(url)
-elif("npmjs" in url_split):
-    licenseName = licenseScore.npmLicense(url)  
- 
 # Get list of possible licenses from Github
 licenseList = licenseScore.getLicensesList()
 
+# Calls Function for different API calls according to URL Domain
+if("github" in url_split):
+    licenseName = licenseScore.githubLicense(url, licenseList)
+elif("npmjs" in url_split):
+    git_url = licenseScore.npm_to_git(url)
+    licenseName = licenseScore.githubLicense(git_url, licenseList)
+ 
 # Assigns a score according to the license
 scoreLicense = licenseScore.score(licenseList, licenseName)
+scoreCorrect = 0
 
 # Outputs the Score in JSON Format
 jsonDict = {}
-for categories in ["scoreLicense"]:
+for categories in ["scoreCorrect","scoreLicense"]:
     jsonDict[categories] = eval(categories)
-    
+
+result = licenseScore.rustScore()
+print(result)
 print(licenseName)
 print(json.dumps(jsonDict))
-
-# Run a Rust script with the subprocess library and necessary inputs
-# Assign the rust script output to output 
-#output = subprocess.run(["parser_script.rs", "arg1", "arg2"], capture_output=True)
-
-# Turn Rust output to string (decode)
-#print(output.stdout.decode())
