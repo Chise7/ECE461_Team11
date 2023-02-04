@@ -3,7 +3,7 @@ import sys
 import requests
 from github import Github
 
-persToken = "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"
+persToken = "Insert token here!"
 
 def url_checker(url):
     # regex for a proper repository URL structure
@@ -12,7 +12,6 @@ def url_checker(url):
         return "Invalid URL!"
     else:
         return "Valid URL!"
-
 
 def npm_to_git_rep(npmDirectory):
     urlAcq = f"https://registry.npmjs.org/{npmDirectory}"
