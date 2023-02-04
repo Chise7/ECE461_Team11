@@ -2,13 +2,16 @@ import requests
 import base64
 import ctypes
 
-# Request to get Github Repo License
-def githubLicense(ownerRepo, licenseList):
-    ownerRepo = ownerRepo.replace("https://github.com/", "") # get the owner and repo name separated for api call
+def get_owner_repo(url):
+    ownerRepo = url.replace("https://github.com/", "") # get the owner and repo name separated for api call
     ownerRepo = ownerRepo.replace(".git", "")
     gitToken = "" # ADD HERE YOUR GITHUB TOKEN
-    api_Url = f"https://api.github.com/repos/{ownerRepo}/license"
-    headers = {"Authorization": f"{gitToken}"}
+    return ownerRepo, gitToken
+
+# Request to get Github Repo License
+def githubLicense(owner_repo, git_token, licenseList):
+    api_Url = f"https://api.github.com/repos/{owner_repo}/license"
+    headers = {"Authorization": f"{git_token}"}
     get_license = requests.get(api_Url, headers=headers)
     
     # Checks if the API call was successful for the License File
@@ -43,15 +46,20 @@ def npm_to_git(npm_url):
             return "Not a Github Repository!"
     
 # Gets Github lists of Licenses
-def getLicensesList():
+def getLicensesList(git_token):
     licenseNames = []
-    gitToken = "" # ADD HERE YOUR GITHUB TOKEN
     licenses_url = f"https://api.github.com/licenses"
-    headers = {"Authorization": f"{gitToken}"}
-    licenseList = requests.get(licenses_url, headers=headers).json()
-    for i in licenseList:
-        licenseNames.append(i["name"])
-    return licenseNames
+    headers = {"Authorization": f"{git_token}"}
+    licenseList = requests.get(licenses_url, headers=headers)
+    if(licenseList.status_code == 200):
+        licenseList = licenseList.json()
+        for i in licenseList:
+            print(i)
+            licenseNames.append(i["name"])
+        return licenseNames
+    else:
+        print(licenseList.status_code)
+        return "Error"
 
 # Searches for any License mentioned in the README
 def searchReadme(url, headers):
@@ -75,13 +83,18 @@ def rustScore():
     rust_lib = ctypes.CDLL('License/license_score/target/debug/rustypython.dll')
 
     rust_function = rust_lib.get_string
+    score_function = rust_lib.get_score
     rust_function.restype = ctypes.c_char_p
+    score_function.restype = ctypes.c_double
     resultString = rust_function().decode()
+    scoreDouble = score_function().decode()
+    print(scoreDouble)
     return resultString
 
 def score(licenseList, licenseName):
     licenseList = [i.lower() for i in licenseList]
     licenseName = licenseName.lower()
+    #return 0 #rustScore(licenseList, licenseName)
     score = 0
     
     if("v2.1" in licenseName):
