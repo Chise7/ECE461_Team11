@@ -54,7 +54,6 @@ def getLicensesList(git_token):
     if(licenseList.status_code == 200):
         licenseList = licenseList.json()
         for i in licenseList:
-            print(i)
             licenseNames.append(i["name"])
         return licenseNames
     else:

@@ -18,8 +18,7 @@ def license_func(owner_repo, git_token):
 def correctness_func(owner_repo, git_token):
     
     correcntessList = [
-        correctnessScore.get_Resp_Maintainer(),
-        correctnessScore.get_downloads(owner_repo, git_token), 
+        #correctnessScore.get_Resp_Maintainer(), 
         correctnessScore.get_downloads(owner_repo, git_token),    
         correctnessScore.get_doc(owner_repo, git_token),
         correctnessScore.get_stars(owner_repo, git_token),
