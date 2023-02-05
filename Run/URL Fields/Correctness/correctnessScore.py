@@ -9,12 +9,17 @@ def get_downloads(owner_repo, git_token):
     downloads_score = 0
     release_count = len(releases)
     if(downloads_request.status_code == 200):
-        for version in range(0, release_count):
-            downloads_score += int(releases[version]["assets"][0]["download_count"])
-        if(downloads_score > 1000):
-            downloads_score = 0.15
-        else:
+        try: # Try to see if it exists
+            if("download_count" in releases[0]["assets"][0]): 
+                for version in range(0, release_count - 1):
+                    downloads_score += int(releases[version]["assets"][0]["download_count"])
+                if(downloads_score > 1000):
+                    downloads_score = 0.15
+                else:
+                    downloads_score = 0
+        except:
             downloads_score = 0
+
     else:
         downloads_score = 0
 

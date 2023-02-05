@@ -25,7 +25,7 @@ def correctness_func(owner_repo, git_token):
         correctnessScore.get_issues(owner_repo, git_token),
         correctnessScore.get_pr(owner_repo, git_token)]
     
-    return sum(correcntessList)
+    return sum(correcntessList), correcntessList
 
 if __name__ == "__main__":
     
@@ -43,7 +43,7 @@ if __name__ == "__main__":
 
     # Get Scores for all URL Categories
     license_score, licenseName = license_func(owner_repo, git_token)
-    correctness_score = correctness_func(owner_repo, git_token)
+    correctness_score, correctnessList = correctness_func(owner_repo, git_token)
     
     # Outputs the Scores in JSON Format
     jsonDict = {}
@@ -51,6 +51,6 @@ if __name__ == "__main__":
         jsonDict[categories] = eval(categories)
 
     #result = licenseScore.rustScore()
-    #print(result)
-    #print(licenseName)
+    print(licenseName)
+    print("Correctness Scores: ", correctnessList)
     print(json.dumps(jsonDict))

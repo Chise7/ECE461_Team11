@@ -16,13 +16,18 @@ def githubLicense(owner_repo, git_token, licenseList):
     
     # Checks if the API call was successful for the License File
     if(get_license.status_code != 200):
-        licenseName = searchReadme(api_Url, headers)
+        readmeLicense = searchReadme(api_Url, headers, git_token)
+        licenseName = "License Error"
+        if(readmeLicense != "No License"):
+            licenseName = readmeLicense
         return licenseName
     else:
         licenseName = get_license.json()["license"]["name"]
         # Second way of checking for license if there was a Null Name for License
         if(licenseName not in licenseList):
-            licenseName = searchReadme(api_Url, headers)
+            readmeLicense = searchReadme(api_Url, headers, git_token)
+            if(readmeLicense != "No License"):
+                licenseName = readmeLicense
         return licenseName
 
 # NPM API will get Github Repo from it's registry
@@ -57,26 +62,26 @@ def getLicensesList(git_token):
             licenseNames.append(i["name"])
         return licenseNames
     else:
-        print(licenseList.status_code)
+        #print(licenseList.status_code)
         return "Error"
 
 # Searches for any License mentioned in the README
-def searchReadme(url, headers):
+def searchReadme(url, headers, git_token):
     url = url.rsplit("/", 1)[0] + "/readme"
     getReadme = requests.get(url, headers=headers)
     if(getReadme.status_code != 200):
-        return "No Readme"
+        return "No License"
     else:
         readmeContent = getReadme.json()["content"].encode("utf-8")
         readmeContent = base64.b64decode(readmeContent)
         readmeContent = str(readmeContent).lower()
-        licenseList = getLicensesList()
+        licenseList = getLicensesList(git_token)
         licenseList = [i.lower() for i in licenseList]
 
         for gitLicense in licenseList:
             if gitLicense in readmeContent:
                 return gitLicense
-        return "No License in Readme"   
+        return "No License"   
 
 def rustScore():
     rust_lib = ctypes.CDLL('License/license_score/target/debug/rustypython.dll')
