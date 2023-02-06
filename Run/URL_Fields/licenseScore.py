@@ -103,8 +103,8 @@ def score(licenseList, licenseName):
     
     if("v2.1" in licenseName):
         score  = 1
-    elif("GNU" in licenseName):
-        score = 0.5
-    elif(licenseName in licenseList):
-        score = 0.25
+    #elif("GNU" in licenseName):
+    #    score = 0.5
+    #elif(licenseName in licenseList):
+    #    score = 0.25
     return score
