@@ -1,6 +1,6 @@
 from urllib.parse import urlparse
-from URL_Fields import licenseScore
-#from URL_Fields import correctnessScore
+from URL_Fields import License
+from URL_Fields import Correctness
 import sys
 import json
 #from github import Github
@@ -26,13 +26,25 @@ def main_driver():
 def license_func(owner_repo, git_token):
     
     # Get list of possible licenses from Github
-    licenseList = licenseScore.getLicensesList(git_token)
+    licenseList = License.getLicensesList(git_token)
     
-    licenseName = licenseScore.githubLicense(owner_repo, git_token, licenseList)
+    licenseName = License.githubLicense(owner_repo, git_token, licenseList)
 
     # Assigns a score according to the license
-    scoreLicense = licenseScore.score(licenseList, licenseName)
+    scoreLicense = License.score(licenseList, licenseName)
     return scoreLicense, licenseName
+ 
+def correctness_func(owner_repo, git_token):
+    
+    correcntessList = [
+        #correctnessScore.get_Resp_Maintainer(), 
+        Correctness.get_downloads(owner_repo, git_token),    
+        Correctness.get_doc(owner_repo, git_token),
+        Correctness.get_stars(owner_repo, git_token),
+        Correctness.get_issues(owner_repo, git_token),
+        Correctness.get_pr(owner_repo, git_token)]
+    
+    return sum(correcntessList), correcntessList
  
 def parser_driver():
     url = sys.argv[1]
@@ -42,21 +54,21 @@ def parser_driver():
     
     # Gets Github Repo from NPM API
     if("npmjs" in url_domain):
-        url = licenseScore.npm_to_git(url)
+        url = License.npm_to_git(url)
     
     # Get Repo Name, Owner and Git Token    
-    owner_repo, git_token = licenseScore.get_owner_repo(url)
+    owner_repo, git_token = License.get_owner_repo(url)
 
     # Get Scores for all URL Categories
     license_score, licenseName = license_func(owner_repo, git_token)
-    #correctness_score, correctnessList = correctness_func(owner_repo, git_token)
+    correctness_score, correctnessList = correctness_func(owner_repo, git_token)
     
     # Outputs the Scores in JSON Format
     jsonDict = {}
-    for categories in ["license_score"]:
+    for categories in ["license_score", "correctness_score"]:
         jsonDict[categories] = eval(categories)
 
-    print(license_score, licenseName)
+    #print(licenseName)
     #print("Correctness Scores: ", correctnessList)
     print(json.dumps(jsonDict))
     return 0
@@ -64,5 +76,3 @@ def parser_driver():
 if __name__ == "__main__":
     #main_driver()
     parser_driver()
-    #print("Hello World")
-
