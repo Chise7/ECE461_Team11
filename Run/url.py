@@ -1,22 +1,22 @@
 from github import Github
-import subprocess
+import NDJSON
 import ctypes
-rustLib = ctypes.cdll.LoadLibrary("Run/target/release")
+rustLib = ctypes.CDLL("Run/target/debug/rustlib.dll")
+netFunc = rustLib.net_score
 
 def main_driver():
-    busScore = busFactor()
-
-def busFactor():
-    g = Github(gitToken) #figure out how to provide gittokens :(
-    repo = g.get_user().get_repo("ECE461_Team11")
-    commits = repo.get_commits()
-    authors = []
-    for commit in commits:
-        if commit.author.name not in authors: authors.append(commit.author.name)
-    numOfAuthors = len(authors)
-    rustLib.get_result("test")
-    return(0)
-
+    URLList = []
+    for URL in URL_FILE:
+        busScore = busFactor()
+        correct = 
+        responsive = 
+        rampUp = 
+        licenseScore =
+        overall = netFunc(busScore, correct, responsive, rampUp, licenseScore)
+        URLList.append({URL:{TotalScore: overall, License: licenseScore, RampUp: rampUp, BusFactor: busScore, ResponsiveMaintainers: responsive, Correct: correct}})
+    with open("output.NDJSON", "w") as out:
+        ndjson.dumps(URLList,out)
+    out.close()
 if __name__ == "__main__":
     main_driver()
 
