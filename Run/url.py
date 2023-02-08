@@ -3,10 +3,10 @@ from URL_Fields import License
 from URL_Fields import Correctness
 import sys
 import json
-#from github import Github
+from github import Github
 import ndjson
 import ctypes
-#rustLib = ctypes.CDLL("target/debug/rustlib.dll")
+rustLib = ctypes.CDLL("target/debug/rustlib.dll")
 #netFunc = rustLib.net_score
 
 def main_driver():
