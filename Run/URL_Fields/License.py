@@ -83,28 +83,8 @@ def searchReadme(url, headers, git_token):
                 return gitLicense
         return "No License"   
 
-def rustScore():
-    rust_lib = ctypes.CDLL('License/license_score/target/debug/rustypython.dll')
-
-    rust_function = rust_lib.get_string
-    score_function = rust_lib.get_score
-    rust_function.restype = ctypes.c_char_p
-    score_function.restype = ctypes.c_double
-    resultString = rust_function().decode()
-    scoreDouble = score_function().decode()
-    print(scoreDouble)
-    return resultString
-
-def score(licenseList, licenseName):
-    licenseList = [i.lower() for i in licenseList]
-    licenseName = licenseName.lower()
-    #return 0 #rustScore(licenseList, licenseName)
-    score = 0
-    
-    if("v2.1" in licenseName):
-        score  = 1
-    #elif("GNU" in licenseName):
-    #    score = 0.5
-    #elif(licenseName in licenseList):
-    #    score = 0.25
+def rustScore(license):
+    rust_lib = ctypes.CDLL('target/debug/rustlib.dll')
+    # Call Rust Function with license name in binary
+    score = rust_lib.license_score(license.encode("utf-8"))
     return score
