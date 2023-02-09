@@ -4,5 +4,6 @@ ignore_this.py
 __pycache__
 /venv/
 /sample-files/
-/target/
-Cargo.lock
+target/
+.pytest_cache/
+*/Cargo.lock
