@@ -1,16 +1,4 @@
 [package]
-name = "rustlib"
+name = "run"
 version = "0.1.0"
 edition = "2021"
-
-[lib]
-name = "rustlib"
-crate-type = ["cdylib"]
-
-[dependencies.cpython]
-version = "0.7"
-features = ["extension-module"]
-
-[dependencies]
-
-
