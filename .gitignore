@@ -2,8 +2,10 @@ License/license_score
 ignore_this.py
 *.pyc
 __pycache__
-/venv/
-/sample-files/
+
 target/
 .pytest_cache/
-*/Cargo.lock
+venv/
+sample-files/
+
+Cargo.lock
