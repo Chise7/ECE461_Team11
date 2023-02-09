@@ -1,6 +1,6 @@
 # A CLI for trustworthy module re-use
 
-## Basic Use
+## Basic use
 
 Install dependencies for the user
 
@@ -19,7 +19,7 @@ Run the full test suite
 
     ./run test
 
-## Miscellaneous
+## Miscellaneous commands
 
 Clean up products of compilation
 
