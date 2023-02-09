@@ -2,11 +2,11 @@
 
 ## Basic Use
 
-Install dependencies
+Install dependencies for the user
 
     ./run install
 
-Create binary executable
+Compile and create executable
 
     ./run build
 
