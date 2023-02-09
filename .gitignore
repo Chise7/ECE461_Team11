@@ -1,8 +1,13 @@
-License/license_score
-ignore_this.py
+# Python
 *.pyc
 __pycache__
-/venv/
-/sample-files/
-/target/
-Cargo.lock
+.pytest_cache/
+venv/
+
+# Rust
+target/
+**/*.rs.bk
+*.pdb
+
+# Misc.
+sample-files/
