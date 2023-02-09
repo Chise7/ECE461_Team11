@@ -1,5 +1,5 @@
 import pytest
-from ..responsive_maintainer import *
+from ..src.responsive_maintainer.responsive_maintainer import *
 
 
 USERNAME = 'realkevinkwon'
