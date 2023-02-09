@@ -3,10 +3,10 @@ from URL_Fields import License
 from URL_Fields import Correctness
 import sys
 import json
-#from github import Github
+from github import Github
 import ndjson
 import ctypes
-#rustLib = ctypes.CDLL("target/debug/rustlib.dll")
+rustLib = ctypes.CDLL("target/debug/rustlib.dll")
 #netFunc = rustLib.net_score
 
 def main_driver():
@@ -31,13 +31,14 @@ def license_func(owner_repo, git_token):
     licenseName = License.githubLicense(owner_repo, git_token, licenseList)
 
     # Assigns a score according to the license
-    scoreLicense = License.score(licenseList, licenseName)
+    scoreLicense = License.rustScore(licenseName, licenseList)
     return scoreLicense, licenseName
  
-def correctness_func(owner_repo, git_token):
+def correctness_func(owner_repo, git_token, url):
     
     correcntessList = [
-        #correctnessScore.get_Resp_Maintainer(), 
+        #correctnessScore.get_Resp_Maintainer(),
+        #Correctness.get_tags(url),
         Correctness.get_downloads(owner_repo, git_token),    
         Correctness.get_doc(owner_repo, git_token),
         Correctness.get_stars(owner_repo, git_token),
@@ -61,11 +62,11 @@ def parser_driver():
 
     # Get Scores for all URL Categories
     license_score, licenseName = license_func(owner_repo, git_token)
-    correctness_score, correctnessList = correctness_func(owner_repo, git_token)
+    #correctness_score, correctnessList = correctness_func(owner_repo, git_token, url)
     
     # Outputs the Scores in JSON Format
     jsonDict = {}
-    for categories in ["license_score", "correctness_score"]:
+    for categories in ["license_score"]:#, "correctness_score"]:
         jsonDict[categories] = eval(categories)
 
     #print(licenseName)
