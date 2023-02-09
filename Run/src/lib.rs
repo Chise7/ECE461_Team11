@@ -4,6 +4,7 @@
 // use git2::Sort;
 use std::ffi::CStr;
 use std::os::raw::c_char;
+use std::os::raw::c_int;
 use std::str;
 
 #[no_mangle]
@@ -51,6 +52,15 @@ let license = str::from_utf8(c_ptr_to_bytes);
     else{
         return 0;
     }
+}
+
+// Returns 0 and should return score
+
+#[no_mangle]
+pub extern "C" fn get_rm_score(rm_score: c_int) -> c_int{
+    let correctness_rm_score = 3;
+    let score = rm_score * correctness_rm_score;
+    return score;
 }
 
 

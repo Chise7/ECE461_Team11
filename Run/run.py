@@ -5,8 +5,8 @@ import sys
 
 if __name__ == "__main__":
     if(sys.argv[1] == "build"):
-        build.run_build()
+        sys.exit(build.run_build()) # Should exit 0 on success
     elif(sys.argv[1] == "install"):
-        install.run_install()
+        sys.exit(install.run_install()) # Should exit 0 on success
     else:
-        url.parser_driver() # Subject to Change
+        sys.exit(url.parser_driver()) # Should exit 0 on success // Subject to Change

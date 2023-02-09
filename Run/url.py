@@ -31,13 +31,14 @@ def license_func(owner_repo, git_token):
     licenseName = License.githubLicense(owner_repo, git_token, licenseList)
 
     # Assigns a score according to the license
-    scoreLicense = License.rustScore(licenseName)
+    scoreLicense = License.rustScore(licenseName, licenseList)
     return scoreLicense, licenseName
  
-def correctness_func(owner_repo, git_token):
+def correctness_func(owner_repo, git_token, url):
     
     correcntessList = [
-        #correctnessScore.get_Resp_Maintainer(), 
+        #correctnessScore.get_Resp_Maintainer(),
+        #Correctness.get_tags(url),
         Correctness.get_downloads(owner_repo, git_token),    
         Correctness.get_doc(owner_repo, git_token),
         Correctness.get_stars(owner_repo, git_token),
@@ -61,7 +62,7 @@ def parser_driver():
 
     # Get Scores for all URL Categories
     license_score, licenseName = license_func(owner_repo, git_token)
-    #correctness_score, correctnessList = correctness_func(owner_repo, git_token)
+    #correctness_score, correctnessList = correctness_func(owner_repo, git_token, url)
     
     # Outputs the Scores in JSON Format
     jsonDict = {}
@@ -76,4 +77,3 @@ def parser_driver():
 if __name__ == "__main__":
     #main_driver()
     parser_driver()
-

@@ -22,4 +22,3 @@ def test_fail_rustScore():
 
 def test_pass_rustScore():
     pass
-

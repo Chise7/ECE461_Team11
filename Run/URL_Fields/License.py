@@ -50,7 +50,7 @@ def npm_to_git(npm_url):
         else:
             return "Not a Github Repository!"
     
-# Gets Github lists of Licenses
+# Gets Github lists of Approved Licenses with LGPL v2.1
 def getLicensesList(git_token):
     licenseNames = []
     licenses_url = f"https://api.github.com/licenses"
@@ -58,12 +58,33 @@ def getLicensesList(git_token):
     licenseList = requests.get(licenses_url, headers=headers)
     if(licenseList.status_code == 200):
         licenseList = licenseList.json()
-        for i in licenseList:
-            licenseNames.append(i["name"])
+        licenseNames = approved_licenses(licenseList,licenses_url, headers)
+        #for i in licenseList:
+            #licenseNames.append(i["name"])
+            # Instead of Appending to List, will send list to approved and one by one see if its approved
         return licenseNames
     else:
-        #print(licenseList.status_code)
         return "Error"
+
+def approved_licenses(licenseList, api_url, headers):
+    new_list = ["GNU Lesser General Public License v2.1"]  # Original License to Account
+    copyleft = []
+    for license in licenseList:
+        url = api_url + "/" + license["key"]
+        licenseList = requests.get(url, headers=headers)
+        if(licenseList.status_code == 200):
+            licenseList = licenseList.json()
+            description = licenseList['description']
+            if("permissive" in description):
+                new_list.append(license["name"])
+            elif("no conditions" in description):
+                new_list.append(license["name"])
+            if("GNU Lesser General Public License v2.1" or "LGPL v2.1" in licenseList['body']):
+                copyleft.append(license["name"])
+        else:
+            print("API Error")
+    return new_list
+
 
 # Searches for any License mentioned in the README
 def searchReadme(url, headers, git_token):
@@ -83,8 +104,12 @@ def searchReadme(url, headers, git_token):
                 return gitLicense
         return "No License"   
 
-def rustScore(license):
+def rustScore(license, licenseList):
     rust_lib = ctypes.CDLL('target/debug/rustlib.dll')
     # Call Rust Function with license name in binary
     score = rust_lib.license_score(license.encode("utf-8"))
+    if(license in licenseList):
+        score = 1
+    else:
+        score = 0
     return score

@@ -1,5 +1,6 @@
-from URL_Fields import Correctness
-
+import sys
+sys.path.insert(1, '../Run/URL_Fields')
+import Correctness
 
 def test_get_downlaods():
     pass
