@@ -24,16 +24,16 @@ def npm_to_git_rep(npmDirectory):
             gitURL = gitStripped.group(0)[1:]
             return gitURL
         else:
-            return "Non-Github URL"
+            return "guh"
 
     else:
-        return "NPM Error"
+        return "guh"
 
 def ramp_up(url):
     # Check if valid repo URL
     checked = url_checker(url)
     if checked == "Invalid URL!":
-        return checked
+        return -10
     # Extract repo directory
     gitPattern = re.compile(r"\/[A-z]+\/[A-z]+")
     unver = gitPattern.search(url)
@@ -45,11 +45,13 @@ def ramp_up(url):
         #print("valid NPM git repo format")
         unverDir = unverDir.replace("package/","")
         repoDir = npm_to_git_rep(unverDir)
+        if "guh" in repoDir:
+            return -10
     elif "github.com" in url:
         #print("valid Github repo format")
         repoDir = unverDir
     else:
-        return "Not a compatible URL!"
+        return -10
 
     # Evaluating Github Repository contents
     folderCount = 0
@@ -79,10 +81,10 @@ def ramp_up(url):
     if not readFound:
         readWeight = 0
 
-    totalScore = folderWeight + readWeight
+    totalScore = int((folderWeight + readWeight) * 100)
     return totalScore
 if __name__ == '__main__':
     score = ramp_up(sys.argv[1])
-    if(type(score) is str):
+    if(score < 0):
         print("Error Encountered")
     print(score)
