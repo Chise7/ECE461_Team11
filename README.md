@@ -1,13 +1,4 @@
-# ECE 30861: A CLI for trustworthy module re-use
-
-### Team members
-
-- Philip Chu
-- Esteban Gorostiaga
-- Connor Hise
-- Kevin Kwon
-
-### Directory structure
+# A CLI for trustworthy module re-use
 
 ## Basic Use
 
@@ -19,11 +10,10 @@ Create binary executable
 
     ./run build
 
-Run the CLI program
+Run the CLI program (`URL_FILE` is a file consisting of URLs separated by newlines)
 
     ./run <URL_FILE>
 
-`URL_FILE` is a URLs separated by newlines.
 
 Run the full test suite
 
@@ -38,3 +28,11 @@ Clean up products of compilation
 View lines of code by language (see [AlDanial/cloc](https://github.com/AlDanial/cloc))
 
     make cloc
+
+## Authors
+
+### ECE 30861 Team 11
+- Philip Chu, [PC192](https://github.com/PC192)
+- Esteban Gorostiaga, [estebangorostiaga](https://github.com/estebangorostiaga)
+- Connor Hise, [Chise7](https://github.com/Chise7)
+- Kevin Kwon, [realkevinkwon](https://github.com/realkevinkwon)
