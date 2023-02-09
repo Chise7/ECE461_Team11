@@ -17,7 +17,7 @@ then
     echo -e "\t./run <URL_FILE>"
 elif [ $1 == "install" ]
 then
-    make install
+    echo "install"
 elif [ $1 == "build" ]
 then
     cargo build --release
