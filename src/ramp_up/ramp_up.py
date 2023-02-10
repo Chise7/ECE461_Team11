@@ -3,7 +3,7 @@ import sys
 import requests
 from github import Github
 
-persToken = "Insert token here!"
+persToken = "Insert Key Here!"
 
 def url_checker(url):
     # regex for a proper repository URL structure
@@ -19,7 +19,7 @@ def npm_to_git_rep(npmDirectory):
     if getGit.status_code == 200:
         gitURL = getGit.json()['repository']['url']
         if "github" in gitURL:
-            gitPattern = re.compile(r"\/[A-z]+\/[A-z]+")
+            gitPattern = re.compile(r"\/[\w]+\/[\w]+")
             gitStripped= gitPattern.search(gitURL)
             gitURL = gitStripped.group(0)[1:]
             return gitURL
@@ -33,10 +33,12 @@ def ramp_up(url):
     # Check if valid repo URL
     checked = url_checker(url)
     if checked == "Invalid URL!":
-        return -10
+        return -1
     # Extract repo directory
-    gitPattern = re.compile(r"\/[A-z]+\/[A-z]+")
+    gitPattern = re.compile(r"\/[\w]+\/[\w]+")
     unver = gitPattern.search(url)
+    if unver == None:
+        return -2
     unverDir = unver.group(0)[1:]
     # Check Git vs NPM URLS
     # Cross-compatibility here relies entirely on if the repo has a Github entry
@@ -46,12 +48,14 @@ def ramp_up(url):
         unverDir = unverDir.replace("package/","")
         repoDir = npm_to_git_rep(unverDir)
         if "guh" in repoDir:
-            return -10
+            return -3
     elif "github.com" in url:
         #print("valid Github repo format")
+        if requests.get(url).status_code != 200:
+            return -4
         repoDir = unverDir
     else:
-        return -10
+        return -5
 
     # Evaluating Github Repository contents
     folderCount = 0
@@ -85,6 +89,6 @@ def ramp_up(url):
     return totalScore
 if __name__ == '__main__':
     score = ramp_up(sys.argv[1])
-    if(score < 0):
-        print("Error Encountered")
+    #if(score < 0):
+    #    print("Error Encountered")
     print(score)
