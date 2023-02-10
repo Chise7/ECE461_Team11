@@ -59,9 +59,6 @@ def getLicensesList(git_token):
     if(licenseList.status_code == 200):
         licenseList = licenseList.json()
         licenseNames = approved_licenses(licenseList,licenses_url, headers)
-        #for i in licenseList:
-            #licenseNames.append(i["name"])
-            # Instead of Appending to List, will send list to approved and one by one see if its approved
         return licenseNames
     else:
         return "Error"
@@ -105,9 +102,12 @@ def searchReadme(url, headers, git_token):
         return "No License"   
 
 def rustScore(license, licenseList):
+    licenseList = [i.lower() for i in licenseList]
+    license = license.lower()
     rust_lib = ctypes.CDLL('target/debug/rustlib.dll')
     # Call Rust Function with license name in binary
-    score = rust_lib.license_score(license.encode("utf-8"))
+    score = rust_lib.license_score(license.encode("utf-8") ) #, licenseList.encode("utf-8"))
+    
     if(license in licenseList):
         score = 1
     else:
