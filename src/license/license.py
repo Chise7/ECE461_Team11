@@ -5,8 +5,7 @@ import ctypes
 def get_owner_repo(url):
     ownerRepo = url.replace("https://github.com/", "") # get the owner and repo name separated for api call
     ownerRepo = ownerRepo.replace(".git", "")
-    gitToken = "" # ADD HERE YOUR GITHUB TOKEN
-    return ownerRepo, gitToken
+    return ownerRepo
 
 # Request to get Github Repo License
 def githubLicense(owner_repo, git_token, licenseList):
@@ -59,9 +58,6 @@ def getLicensesList(git_token):
     if(licenseList.status_code == 200):
         licenseList = licenseList.json()
         licenseNames = approved_licenses(licenseList,licenses_url, headers)
-        #for i in licenseList:
-            #licenseNames.append(i["name"])
-            # Instead of Appending to List, will send list to approved and one by one see if its approved
         return licenseNames
     else:
         return "Error"
@@ -85,7 +81,6 @@ def approved_licenses(licenseList, api_url, headers):
             print("API Error")
     return new_list
 
-
 # Searches for any License mentioned in the README
 def searchReadme(url, headers, git_token):
     url = url.rsplit("/", 1)[0] + "/readme"
@@ -104,12 +99,11 @@ def searchReadme(url, headers, git_token):
                 return gitLicense
         return "No License"   
 
-def rustScore(license, licenseList):
+def rust_Score(license, license_list):
+    license_list = ", ".join(license_list).lower()    
+    license = license.lower()
     rust_lib = ctypes.CDLL('target/debug/rustlib.dll')
+    
     # Call Rust Function with license name in binary
-    score = rust_lib.license_score(license.encode("utf-8"))
-    if(license in licenseList):
-        score = 1
-    else:
-        score = 0
+    score = rust_lib.license_score(license.encode("utf-8"), license_list.encode("utf-8"))
     return score
