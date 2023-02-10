@@ -10,7 +10,7 @@ pub fn print_scores(url_file: &str) {
     let correctness_score: f64 = correctness_score(url_file);
     let bus_factor_score: f64 = bus_factor_score(url_file);
     let responsive_maintainer_score: f64 = responsive_maintainer_score(url_file);
-    let license_score: f64 = license_score(url_file);
+    //let license_score: f64 = license_score(url_file);
 
     let net_score: f64 = net_score(
         ramp_up_score,
@@ -72,11 +72,6 @@ fn responsive_maintainer_score(url_file: &str) -> f64 {
     return 0.0
 }
 
-fn license_score(url_file: &str) -> f64 {
-
-    return 1.0
-}
-
 fn net_score(ramp_up_score: f64,
              correctness_score: f64,
              bus_factor_score: f64,
@@ -128,10 +123,6 @@ fn read_lines<P>(filename: P) -> io::Result<io::Lines<io::BufReader<File>>> wher
 // extern crate git2;
 // use git2::Repository;
 // use git2::Sort;
-use std::ffi::CStr;
-use std::os::raw::c_char;
-use std::os::raw::c_int;
-use std::str;
 
 #[no_mangle]
 pub extern "C" fn bus_score(val: i32)-> i32{
@@ -155,6 +146,10 @@ pub extern "C" fn bus_score(val: i32)-> i32{
     return result
 }
 
+use std::ffi::CStr;
+use std::os::raw::c_char;
+use std::os::raw::c_int;
+use std::str;
 
 pub extern "C" fn net_score(bus:i32, correct:i32, responsive:i32, ramp:i32, license:i32)->i32{
     let result:i32 = (((10 * bus)+(30*responsive)+(30*correct) + (30*ramp))*license) / 100;
@@ -162,17 +157,23 @@ pub extern "C" fn net_score(bus:i32, correct:i32, responsive:i32, ramp:i32, lice
 }
 
 #[no_mangle]
-pub extern "C" fn license_score(license: *const c_char) -> i32{
+pub extern "C" fn license_score(license: *const c_char, license_list: *const c_char) -> i32{
 
 // Using Unsafe to dereference the pointer and converting it to bytes
 let c_ptr_to_bytes = unsafe { CStr::from_ptr(license).to_bytes() };
 
+// Using Unsafe to dereference the pointer and converting it to bytes
+let c_ptr_to_bytes2 = unsafe { CStr::from_ptr(license_list).to_bytes() };
+
 // Converting from bytes to a string
-let license = str::from_utf8(c_ptr_to_bytes);
+let license = str::from_utf8(c_ptr_to_bytes).unwrap();
+
+// Converting from bytes to a string
+let license_list = str::from_utf8(c_ptr_to_bytes2).unwrap();
 
 // Unwrap, in case license is empty or null
 // Return 1 if GNU v2.1 License found
-    if license.unwrap().contains("v2.1") {
+    if license_list.contains(license) {
         return 1;
     }
     else{
