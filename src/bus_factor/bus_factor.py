@@ -1,11 +1,13 @@
 import github as Github
-from RampUp import npm_to_git_rep
+from ramp_up import ramp_up
 import ctypes
 rustLib = ctypes.CDLL("Run/target/debug/rustlib.dll")
 
-def busFactor():
-    URL = "https://github.com/Chise7/ECE461_Team11"
-    g = Github() #figure out how to provide gittokens :( <- GITTOKEN HERE?
+def busFactor(URL, token):
+    if "npmjs.com" in URL:
+        URL = ramp_up.npm_to_git_rep(URL)
+    # URL = "https://github.com/Chise7/ECE461_Team11"
+    g = Github(token) #figure out how to provide gittokens :( <- GITTOKEN HERE?
     repo = g.get_repo(URL)
     commits = repo.get_commits()
     authors = []
@@ -15,3 +17,6 @@ def busFactor():
     numOfAuthors = len(authors)
     busFunc = rustLib.bus_score
     return(busFunc(numOfAuthors))
+
+if __name__ == "__main__":
+    busFactor()

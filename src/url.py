@@ -1,9 +1,8 @@
 from urllib.parse import urlparse
 from URL_Fields import License
 from URL_Fields import Correctness
+from bus_factor import bus_factor
 import sys
-import json
-from github import Github
 import ndjson
 import ctypes
 rustLib = ctypes.CDLL("target/debug/rustlib.dll")
@@ -11,14 +10,16 @@ rustLib = ctypes.CDLL("target/debug/rustlib.dll")
 
 def main_driver():
     URLList = []
-    for URL in URL_FILE:
-        busScore = busFactor()
+    URL_FILE = open(sys.argv[1])
+    urlLines = URL_FILE.readlines()
+    for URL in urlLines:
+        busScore = bus_factor.busFactor(URL)
         correct = 0
         responsive = 0
         rampUp = 0
         licenseScore = 0
         net_score = sum(busScore, correct, responsive, rampUp, licenseScore) / 5
-        URLList.append({URL:{TotalScore: net_score, License: licenseScore, RampUp: rampUp, BusFactor: busScore, ResponsiveMaintainers: responsive, Correct: correct}})
+        URLList.append({URL:{"TotalScore": net_score, "License": licenseScore, "RampUp": rampUp, "BusFactor": busScore, "ResponsiveMaintainers": responsive, "Correct": correct}})
     with open("output.NDJSON", "w") as out:
         ndjson.dumps(URLList,out)
     out.close()    
