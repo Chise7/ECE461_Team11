@@ -68,10 +68,12 @@ def get_tags(url):
             tag_not_committed.append(tag.name)
     
     tags_score = 0.0
-    #If more than 95% of Commits are Tagged, get full score
-    if((len(tag_list) - len(tag_not_committed)) / len(tag_list) > 0.95):
+    if(len(tag_list) != 0):
+        #If more than 95% of Commits are Tagged, get full score
+        if((len(tag_list) - len(tag_not_committed)) / len(tag_list) > 0.95):
+            tags_score = 0.10
+    else:
         tags_score = 0.10
-
     return tags_score
 
 def get_issues(owner, repo, token):

@@ -61,7 +61,7 @@ def searchReadme(url, headers, git_token):
     url = url.rsplit("/", 1)[0] + "/readme"
     getReadme = requests.get(url, headers=headers)
     if(getReadme.status_code != 200):
-        return "No License"
+        return "No License, API Failed"
     else:
         readmeContent = getReadme.json()["content"].encode("utf-8")
         readmeContent = base64.b64decode(readmeContent)
