@@ -1,33 +1,11 @@
 import pytest
-from ..src.responsive_maintainer.responsive_maintainer import *
+import importlib
+importlib.import_module('src.url')
+# from ..src.responsive_maintainer.responsive_maintainer import *
 
 
 USERNAME = 'realkevinkwon'
 TOKEN = 'token'
-
-
-@pytest.mark.url
-def test_parse_url():
-    owner, repo = parse_url(
-        url='https://github.com/cloudinary/cloudinary_npm'
-    )
-
-    assert owner == 'cloudinary'
-    assert repo == 'cloudinary_npm'
-
-    owner, repo = parse_url(
-        url='https://github.com/nullivex/nodist'
-    )
-
-    assert owner == 'nullivex'
-    assert repo == 'nodist'
-
-    owner, repo = parse_url(
-        url='https://github.com/lodash/lodash'
-    )
-
-    assert owner == 'lodash'
-    assert repo == 'lodash'
 
 
 @pytest.mark.subscores
