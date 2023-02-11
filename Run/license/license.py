@@ -34,9 +34,10 @@ def npm_to_git(npm_url):
     npm_url = npm_url.replace("https://www.npmjs.com/package/", "") # get the package name separated for api call
     api_Url = f"https://registry.npmjs.org/{npm_url}"
     get_license2 = requests.get(api_Url)
+    #print(get_license2.json())
     
     if(get_license2.status_code != 200):
-        print("Error! NPM")
+        print("Error! NPM npm_to_git")
         return "Error"
     else:
         repo_url = get_license2.json()["repository"]["url"]
@@ -99,10 +100,9 @@ def searchReadme(url, headers, git_token):
                 return gitLicense
         return "No License"   
 
-def rust_Score(license, license_list):
+def rust_Score(license, license_list, rust_lib):
     license_list = ", ".join(license_list).lower()    
     license = license.lower()
-    rust_lib = ctypes.CDLL('target/debug/rustlib.dll')
     
     # Call Rust Function with license name in binary
     score = rust_lib.license_score(license.encode("utf-8"), license_list.encode("utf-8"))

@@ -1,14 +1,14 @@
 import github as Github
 from ramp_up import ramp_up
 import ctypes
-rustLib = ctypes.CDLL("target/debug/rustlib.dll")
+rustLib = ctypes.CDLL("rustlib/target/debug/rust_lib.dll")
 
 def busFactor(URL, token):
     if "npmjs.com" in URL:
         URL = ramp_up.npm_to_git_rep(URL)
     URL = URL.replace("https://github.com/","")
     # URL = "https://github.com/Chise7/ECE461_Team11"
-    g = Github(token) #figure out how to provide gittokens :( <- GITTOKEN HERE?
+    g = token #Github(token) #figure out how to provide gittokens :( <- GITTOKEN HERE?
     repo = g.get_repo(URL)
     commits = repo.get_commits()
     authors = []
