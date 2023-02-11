@@ -154,9 +154,21 @@ fn correctness_score(_owner: &str, _repo: &str, _token: &str) -> f64 {
     return 0.0;
 }
 
-fn bus_factor_score(_owner: &str, _repo: &str, _token: &str) -> f64 {
+fn bus_factor_score(owner: &str, repo: &str, token: &str) -> f64 {
+    let py_output = Command::new("python3")
+                            .arg("src/url/bus_factor.py")
+                            .arg(owner)
+                            .arg(repo)
+                            .arg(token)
+                            .output()
+                            .expect("oops");
 
-    return 0.0;
+    let bus_factor_score = String::from_utf8(py_output.stdout)
+                                  .unwrap()
+                                  .parse::<f64>()
+                                  .unwrap();
+
+    return bus_factor_score;
 }
 
 fn responsive_maintainer_score(owner: &str, repo: &str, token: &str) -> f64 {

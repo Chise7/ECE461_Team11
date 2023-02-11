@@ -41,31 +41,9 @@ fn net_score(mut ramp_up_score: f64,
     return net_score
 }
 
- #[no_mangle]
- pub extern "C" fn get_rm_score(rm_score: c_int) -> c_int{
+#[no_mangle]
+pub extern "C" fn get_rm_score(rm_score: c_int) -> c_int{
     let correctness_rm_score = 3;
     let score = rm_score * correctness_rm_score;
     return score;
- }
-
-#[no_mangle]
-pub extern "C" fn bus_score(val: i32)-> i32{
-//     // let URL: &str = "https://github.com/Chise7/ECE461_Team11";
-//     // let repo = Repository::open(URL).expect("Couldn't create file");
-
-//     // let mut revwalk = repo.revwalk().expect("None");
-//     // revwalk.push_head();
-//     // let mut authors: Vec<String> = revwalk.map(|r| {
-//     //     let oid = r;
-//     //     repo.find_commit(oid)
-//     // })
-
-    let mut result:i32 = 0; 
-    if val >= 5 && val < 100{
-        result = 75;
-    } 
-    if val >= 100 {
-        result = 100;
-    };
-    return result
 }
