@@ -41,30 +41,6 @@ fn net_score(mut ramp_up_score: f64,
     return net_score
 }
 
-#[no_mangle]
-pub extern "C" fn license_score(license: *const c_char, license_list: *const c_char) -> i32{
-    // Using Unsafe to dereference the pointer and converting it to bytes
-    let c_ptr_to_bytes = unsafe { CStr::from_ptr(license).to_bytes() };
-
-    // Using Unsafe to dereference the pointer and converting it to bytes
-    let c_ptr_to_bytes2 = unsafe { CStr::from_ptr(license_list).to_bytes() };
-
-    // Converting from bytes to a string
-    let license = str::from_utf8(c_ptr_to_bytes).unwrap();
-
-    // Converting from bytes to a string
-    let license_list = str::from_utf8(c_ptr_to_bytes2).unwrap();
-
-    // Unwrap, in case license is empty or null
-    // Return 1 if GNU v2.1 License found
-    if license_list.contains(license) {
-        return 1;
-    }
-    else{
-        return 0;
-    }
-}
-
  #[no_mangle]
  pub extern "C" fn get_rm_score(rm_score: c_int) -> c_int{
     let correctness_rm_score = 3;

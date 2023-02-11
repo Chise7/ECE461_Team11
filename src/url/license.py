@@ -9,14 +9,14 @@ def get_owner_repo(url):
     return ownerRepo
 
 # Request to get Github Repo License
-def githubLicense(owner_repo, git_token, licenseList):
-    api_Url = f"https://api.github.com/repos/{owner_repo}/license"
-    headers = {"Authorization": f"{git_token}"}
+def githubLicense(owner, repo, token, licenseList):
+    api_Url = f"https://api.github.com/repos/{owner}/{repo}/license"
+    headers = {"Authorization": f"{token}"}
     get_license = requests.get(api_Url, headers=headers)
     
     # Checks if the API call was successful for the License File
     if(get_license.status_code != 200):
-        readmeLicense = searchReadme(api_Url, headers, git_token)
+        readmeLicense = searchReadme(api_Url, headers, token)
         licenseName = "License Error"
         if(readmeLicense != "No License"):
             licenseName = readmeLicense
@@ -25,7 +25,7 @@ def githubLicense(owner_repo, git_token, licenseList):
         licenseName = get_license.json()["license"]["name"]
         # Second way of checking for license if there was a Null Name for License
         if(licenseName not in licenseList):
-            readmeLicense = searchReadme(api_Url, headers, git_token)
+            readmeLicense = searchReadme(api_Url, headers, token)
             if(readmeLicense != "No License"):
                 licenseName = readmeLicense
         return licenseName
@@ -100,26 +100,21 @@ def searchReadme(url, headers, git_token):
                 return gitLicense
         return "No License"   
 
-def rust_score(license, license_list):
+def rust_score(owner, repo, token):
+    license_list = getLicensesList(token)
+    
+    license_name = githubLicense(owner, repo, token, license_list).lower()
+
     license_list = ", ".join(license_list).lower()    
-    license = license.lower()
-    rust_lib = ctypes.CDLL('target/debug/rustlib.dll')
+    # rust_lib = ctypes.CDLL('target/debug/rustlib.dll')
     
     # Call Rust Function with license name in binary
-    score = rust_lib.license_score(license.encode("utf-8"), license_list.encode("utf-8"))
-    return score
-
-def license_func(owner, repo, token):
-    
-    # Get list of possible licenses from Github
-    licenseList = license.getLicensesList(token)
-    
-    licenseName = license.githubLicense(owner, repo, token, licenseList)
-
-    # Assigns a score according to the license
-    scoreLicense = license.rustScore(licenseName, licenseList)
-    return scoreLicense
+    if license_name in license_list:
+        return 1
+    else:
+        return 0
 
 if __name__ == "__main__":
-    print(f"{rust_score(sys.argv[1], sys.argv[2])}", end="")
-    # print(f"63", end="")
+    license_score = 1
+    # license_score = rust_score(sys.argv[1], sys.argv[2], sys.argv[3])
+    print(license_score, end="")

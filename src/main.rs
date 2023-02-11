@@ -134,12 +134,12 @@ fn get_token() -> String {
 // url: "https://pyo3.rs/v0.18.0/python_from_rust.html"
 fn ramp_up_score(owner: &str, repo: &str, token: &str) -> f64 {
     let py_output = Command::new("python3")
-                         .arg("src/url/ramp_up.py")
-                         .arg(owner)
-                         .arg(repo)
-                         .arg(token)
-                         .output()
-                         .expect("oops");
+                            .arg("src/url/ramp_up.py")
+                            .arg(owner)
+                            .arg(repo)
+                            .arg(token)
+                            .output()
+                            .expect("oops");
 
     let ramp_up_score = String::from_utf8(py_output.stdout)
                                .unwrap()
@@ -161,12 +161,12 @@ fn bus_factor_score(_owner: &str, _repo: &str, _token: &str) -> f64 {
 
 fn responsive_maintainer_score(owner: &str, repo: &str, token: &str) -> f64 {
     let py_output = Command::new("python3")
-                         .arg("src/url/responsive_maintainer.py")
-                         .arg(owner)
-                         .arg(repo)
-                         .arg(token)
-                         .output()
-                         .expect("oops");
+                            .arg("src/url/responsive_maintainer.py")
+                            .arg(owner)
+                            .arg(repo)
+                            .arg(token)
+                            .output()
+                            .expect("oops");
 
     let responsive_maintainer_score = String::from_utf8(py_output.stdout)
                                              .unwrap()
@@ -176,9 +176,21 @@ fn responsive_maintainer_score(owner: &str, repo: &str, token: &str) -> f64 {
     return responsive_maintainer_score;
 }
 
-fn license_score(_owner: &str, _repo: &str, _token: &str) -> f64 {
+fn license_score(owner: &str, repo: &str, token: &str) -> f64 {
+    let py_output = Command::new("python3")
+                            .arg("src/url/license.py")
+                            .arg(owner)
+                            .arg(repo)
+                            .arg(token)
+                            .output()
+                            .expect("oops");
 
-    return 0.0;
+    let license_score = String::from_utf8(py_output.stdout)
+                               .unwrap()
+                               .parse::<f64>()
+                               .unwrap();
+
+    return license_score;
 }
 
 fn net_score(mut ramp_up_score: f64,
