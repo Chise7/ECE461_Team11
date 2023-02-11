@@ -9,7 +9,6 @@ class Source(Enum):
     GITHUB = 'github.com'
     NPM = 'npmjs.com'
 
-
 # def parse_url(url: str) -> tuple[str, str]:
 #     pattern = r'\S*('
 #     pattern += Source.GITHUB.value
@@ -117,6 +116,6 @@ def get_responsive_maintainer_score(owner: str, repo: str, token: str) -> float:
     return responsive_maintainer_score
 
 if __name__ == "__main__":
-    responsive_maintainer_score = 0.64
-    # responsive_maintainer_score = get_responsive_maintainer_score(sys.argv[1], sys.argv[2], sys.argv[3])
+    # responsive_maintainer_score = 0.64
+    responsive_maintainer_score = get_responsive_maintainer_score(sys.argv[1], sys.argv[2], sys.argv[3])
     print(responsive_maintainer_score, end="")

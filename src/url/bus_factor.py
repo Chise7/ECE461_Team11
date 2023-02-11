@@ -20,6 +20,6 @@ def bus_factor(owner, repo, token):
         return 0.0
 
 if __name__ == "__main__":
-    bus_factor_score = 0.42
-    # bus_factor_score = bus_factor(sys.argv[1], sys.argv[2], sys.argv[3])
+    # bus_factor_score = 0.42
+    bus_factor_score = bus_factor(sys.argv[1], sys.argv[2], sys.argv[3])
     print(bus_factor_score, end="")

@@ -48,10 +48,10 @@ fn package_scores(owner: &str, repo: &str, token: &str) -> Vec<f64> {
     let mut package_scores: Vec<f64> = Vec::new();
 
     let ramp_up_score: f64 = ramp_up_score(owner, repo, token);
-    let correctness_score: f64 = correctness_score(owner, repo, token);
     let bus_factor_score: f64 = bus_factor_score(owner, repo, token);
     let responsive_maintainer_score: f64 = responsive_maintainer_score(owner, repo, token);
     let license_score: f64 = license_score(owner, repo, token);
+    let correctness_score: f64 = correctness_score(owner, repo, token, responsive_maintainer_score);
 
     package_scores.push(ramp_up_score);
     package_scores.push(correctness_score);
@@ -147,11 +147,28 @@ fn ramp_up_score(owner: &str, repo: &str, token: &str) -> f64 {
                                .unwrap();
 
     return ramp_up_score;
+    // return 0.8
 }
 
-fn correctness_score(_owner: &str, _repo: &str, _token: &str) -> f64 {
+fn correctness_score(owner: &str, repo: &str, token: &str, responsive_maintainer_score: f64) -> f64 {
+    let rm_score: String = responsive_maintainer_score.to_string();
 
-    return 0.0;
+    let py_output = Command::new("python3")
+                            .arg("src/url/correctness.py")
+                            .arg(owner)
+                            .arg(repo)
+                            .arg(token)
+                            .arg(rm_score)
+                            .output()
+                            .expect("oops");
+
+    let correctness_score = String::from_utf8(py_output.stdout)
+                                   .unwrap()
+                                   .parse::<f64>()
+                                   .unwrap();
+
+    // return correctness_score;
+    return 0.1
 }
 
 fn bus_factor_score(owner: &str, repo: &str, token: &str) -> f64 {
@@ -169,6 +186,7 @@ fn bus_factor_score(owner: &str, repo: &str, token: &str) -> f64 {
                                   .unwrap();
 
     return bus_factor_score;
+    // return 0.2
 }
 
 fn responsive_maintainer_score(owner: &str, repo: &str, token: &str) -> f64 {
@@ -186,6 +204,7 @@ fn responsive_maintainer_score(owner: &str, repo: &str, token: &str) -> f64 {
                                              .unwrap();
 
     return responsive_maintainer_score;
+    // return 0.3
 }
 
 fn license_score(owner: &str, repo: &str, token: &str) -> f64 {
@@ -203,6 +222,7 @@ fn license_score(owner: &str, repo: &str, token: &str) -> f64 {
                                .unwrap();
 
     return license_score;
+    // return 1.0
 }
 
 fn net_score(mut ramp_up_score: f64,

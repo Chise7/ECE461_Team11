@@ -110,11 +110,11 @@ def rust_score(owner, repo, token):
     
     # Call Rust Function with license name in binary
     if license_name in license_list:
-        return 1
+        return 1.0
     else:
-        return 0
+        return 0.0
 
 if __name__ == "__main__":
-    license_score = 1
-    # license_score = rust_score(sys.argv[1], sys.argv[2], sys.argv[3])
+    # license_score = 1.0
+    license_score = rust_score(sys.argv[1], sys.argv[2], sys.argv[3])
     print(license_score, end="")
