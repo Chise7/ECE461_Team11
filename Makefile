@@ -2,7 +2,7 @@ tree:
 	tree -I venv -I sample-files
 
 cloc:
-	cloc --exclude-dir=.pytest_cache,.vscode,sample-files,target,venv .
+	cloc --exclude-dir=.pytest_cache,.vscode,sample-files,target,venv,URL_Fields .
 
 clean:
 	cargo clean

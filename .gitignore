@@ -9,6 +9,7 @@ target/
 Cargo.lock
 **/*.rs.bk
 *.pdb
+URL_Fields/
 
 # Misc.
 sample-files/
