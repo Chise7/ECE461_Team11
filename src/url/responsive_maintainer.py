@@ -1,41 +1,38 @@
-import re
+import sys
 import requests
 from enum import Enum
 
-
 GITHUB_API_URL = 'https://api.github.com'
-
 
 class Source(Enum):
     NONE = 'none'
     GITHUB = 'github.com'
     NPM = 'npmjs.com'
 
+# def parse_url(url: str) -> tuple[str, str]:
+#     pattern = r'\S*('
+#     pattern += Source.GITHUB.value
+#     pattern += '|' + Source.NPM.value
+#     # pattern += '|' + Source.<source_name>.value   # Add new source here
+#     pattern += ')/([a-zA-Z0-9-]+)/([a-zA-Z0-9-_.]+)'
 
-def parse_url(url: str) -> tuple[str, str]:
-    pattern = r'\S*('
-    pattern += Source.GITHUB.value
-    pattern += '|' + Source.NPM.value
-    # pattern += '|' + Source.<source_name>.value   # Add new source here
-    pattern += ')/([a-zA-Z0-9-]+)/([a-zA-Z0-9-_.]+)'
+#     # Group 1: source name (including domain),
+#     # Group 2: account name
+#     # Group 3: repository name
+#     result = re.match(pattern, url.lower())
 
-    # Group 1: source name (including domain),
-    # Group 2: account name
-    # Group 3: repository name
-    result = re.match(pattern, url.lower())
+#     owner = ''
+#     repo = ''
 
-    owner = ''
-    repo = ''
+#     if result is not None and result.lastindex == 3:
+#         if result[1] == Source.GITHUB.value:
+#             owner = result[2]
+#             repo = result[3]
+#         elif result[1] == Source.NPM.value:
+#             owner = result[2]
+#             repo = result[3]
 
-    if result is not None and result.lastindex == 3:
-        if result[1] == Source.GITHUB.value:
-            owner = result[2]
-            repo = result[3]
-        elif result[1] == Source.NPM.value:
-            owner = result[2]
-            repo = result[3]
-
-    return owner, repo
+#     return owner, repo
 
 
 def get_yearly_commits_subscore(session: requests.Session, owner: str, repo: str) -> float:
@@ -103,11 +100,11 @@ def get_weekly_adds_and_dels_subscore(session: requests.Session, owner: str, rep
         return 0.0
 
 
-def get_responsive_maintainer_score(username: str, token: str, url: str) -> float:
-    owner, repo = parse_url(url)
+def get_responsive_maintainer_score(owner: str, repo: str, token: str) -> float:
+    # owner, repo = parse_url(url)
 
     session = requests.Session()
-    session.auth = (username, token)
+    # session.auth = (token)
 
     yearly_commits_subscore = get_yearly_commits_subscore(session, owner, repo)
     weekly_adds_and_dels_subscore = get_weekly_adds_and_dels_subscore(session, owner, repo)
@@ -117,3 +114,8 @@ def get_responsive_maintainer_score(username: str, token: str, url: str) -> floa
         0.25 * weekly_adds_and_dels_subscore
 
     return responsive_maintainer_score
+
+if __name__ == "__main__":
+    # responsive_maintainer_score = 0.64
+    responsive_maintainer_score = get_responsive_maintainer_score(sys.argv[1], sys.argv[2], sys.argv[3])
+    print(responsive_maintainer_score, end="")
