@@ -4,13 +4,13 @@ from correctness import correctness
 from bus_factor import bus_factor
 import sys
 import ndjson
+import os
 import ctypes
 rustLib = ctypes.CDLL("target/debug/rustlib.dll")
 netFunc = rustLib.net_score
 
 def main_driver():
-    
-    git_token = "" # ADD HERE ENVIRONMENTAL VARIABLE
+    token = os.getenv('GITHUB_TOKEN')
     URLList = []
     URL_FILE = open(sys.argv[1])
     urlLines = URL_FILE.readlines()
@@ -26,11 +26,11 @@ def main_driver():
         owner_repo = license.get_owner_repo(URL)
         
         responsive = 0
-        busScore = bus_factor.busFactor(URL)
-        correct = correctness_func(owner_repo, git_token, URL)
+        busScore = bus_factor.busFactor(URL,token)
+        correct = correctness_func(owner_repo, token, URL)
         rampUp = 0
-        licenseScore = license_func(owner_repo, git_token)
-        net_score = net_score(busScore,correct,responsive,rampUp,licenseScore)#sum(busScore, correct, responsive, rampUp, licenseScore) / 5
+        licenseScore = license_func(owner_repo, token)
+        net_score = netFunc(busScore,correct,responsive,rampUp,licenseScore)#sum(busScore, correct, responsive, rampUp, licenseScore) / 5
         URLList.append({URL:{"TotalScore": net_score, "License": licenseScore, "RampUp": rampUp, "BusFactor": busScore, "ResponsiveMaintainers": responsive, "Correct": correct}})
     with open("output.NDJSON", "w") as out:
         ndjson.dumps(URLList,out)
