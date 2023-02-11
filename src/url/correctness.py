@@ -28,7 +28,6 @@ def get_doc(owner, repo, token):
     api_Url = f"https://api.github.com/repos/{owner}/{repo}/readme"
     headers = {"Authorization": f"{token}"}
     get_readme = requests.get(api_Url, headers=headers)
-
     doc_score = 0.0
     if(get_readme.status_code == 200):
         doc_score = 0.20
@@ -75,8 +74,6 @@ def get_tags(url):
 
     return tags_score
 
-
-
 def get_issues(owner, repo, token):
     # Base API Call for Total Issues Open and Closed
     api_url_open = f"https://api.github.com/search/issues?q=repo:{owner}/{repo}%20is:issue%20is:open&per_page=1"
@@ -106,14 +103,15 @@ def get_pr(owner, repo, token):
     closed_pr_request = requests.get(api_url_closed, headers=headers)
     
     pr_score = 0.0
+    # More than 100 Pull Requests Made (Open and Closed)
     if(open_pr_request.status_code == 200 and closed_pr_request.status_code == 200):
         total_count = int(open_pr_request.json()["total_count"]) + int(closed_pr_request.json()["total_count"])
-        if(total_count > 50):
+        if(total_count > 100):
             pr_score = 0.10
     
     return pr_score
 
-def total_score(owner, repo, token, responsive_maintainer_score):
+def correctness_func(owner, repo, token, responsive_maintainer_score):
     url = f"https://github.com/{owner}/{repo}"
 
     total_score = \
@@ -129,6 +127,5 @@ def total_score(owner, repo, token, responsive_maintainer_score):
 
 if __name__ == "__main__":
     # correctness_score = 0.93
-    correctness_score = total_score(sys.argv[1], sys.argv[2], sys.argv[3], float(sys.argv[4]))
+    correctness_score = correctness_func(sys.argv[1], sys.argv[2], sys.argv[3], float(sys.argv[4]))
     print(correctness_score, end="")
-
