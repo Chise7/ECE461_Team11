@@ -63,11 +63,17 @@ def remove_readonly(func, path, excinfo):
     return 0
 
 def get_tags(url):
-    path = "URL_Fields/LR-Test"
+    path = "GitPython_Test"
     if(os.path.isdir(path)):
-        shutil.rmtree(path, onerror=remove_readonly)
-    repository = Repo.clone_from(url, path)
-        
+        try:
+            shutil.rmtree(path, onerror=remove_readonly)
+        except:
+            print("Error removing dir")
+    try:
+        repository = Repo.clone_from(url, path)
+    except:
+        print("Error cloning from", url)
+        return 0   
     tag_list = []
     tag_not_committed = []
     
@@ -76,9 +82,12 @@ def get_tags(url):
         if tag.commit not in repository.iter_commits():
             tag_not_committed.append(tag.name)
     
-    #If more than 95% of Commits are Tagged, get full score
-    if((len(tag_list) - len(tag_not_committed)) / len(tag_list) > 0.95):
-        tags_score = 0.10
+    if(len(tag_list) != 0):
+        #If more than 95% of Commits are Tagged, get full score
+        if((len(tag_list) - len(tag_not_committed)) / len(tag_list) > 0.95):
+            tags_score = 0.10
+        else:
+            tags_score = 0
     else:
         tags_score = 0
 
