@@ -3,7 +3,7 @@ import pytest
 from ..src.url.ramp_up import *
 
 USERNAME =  'PC192'
-TOKEN = os.getenv('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')
+TOKEN = os.getenv('insert token here')
 Testcases = [('Chise7', 'ECE461_Team11'),('words', 'double-metaphone'),('jonschlinkert', 'even-metaphone'), ...
             ('SonarSource', 'chocolatey-packages'),('PSOPT', 'psopt'),('nullivex','nodist'),('cloudinary','cloudinary_npm'), ...
             ('lodash','lodash')]
