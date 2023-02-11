@@ -1,6 +1,6 @@
 import pytest
-from importlib import import_module 
-import_module('src.url')
+import importlib
+importlib.import_module('src.url')
 # from ..src.responsive_maintainer.responsive_maintainer import *
 
 
