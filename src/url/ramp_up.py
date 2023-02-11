@@ -18,7 +18,7 @@ def ramp_up(owner, repo, token):
     for objects in rootDir:
         if objects.type == "dir":
             folderCount += 1
-        if "README" in objects.name:
+        if "README" in objects.name or "readme" in objects.name:
             #print("README Found")
             readFound = True
 
