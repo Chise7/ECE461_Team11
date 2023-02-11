@@ -1,7 +1,7 @@
 import github as Github
 from ramp_up import ramp_up
 import ctypes
-rustLib = ctypes.CDLL("Run/target/debug/rustlib.dll")
+rustLib = ctypes.CDLL("target/debug/rustlib.dll")
 
 def busFactor(URL, token):
     if "npmjs.com" in URL:

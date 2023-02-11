@@ -1,13 +1,12 @@
 from urllib.parse import urlparse
 from license import license
 from correctness import correctness
-#from bus_factor import bus_factor
+from bus_factor import bus_factor
 import sys
 import ndjson
 import ctypes
-import json
-#rustLib = ctypes.CDLL("target/debug/rustlib.dll")
-#netFunc = rustLib.net_score
+rustLib = ctypes.CDLL("target/debug/rustlib.dll")
+netFunc = rustLib.net_score
 
 def main_driver():
     
@@ -21,7 +20,7 @@ def main_driver():
         
         # Gets Github Repo from NPM API
         if("npmjs" in url_domain):
-            URL = License.npm_to_git(URL)
+            URL = license.npm_to_git(URL)
     
         # Get Repo Name and Owner    
         owner_repo = license.get_owner_repo(URL)
@@ -31,7 +30,7 @@ def main_driver():
         correct = correctness_func(owner_repo, git_token, URL)
         rampUp = 0
         licenseScore = license_func(owner_repo, git_token)
-        net_score = sum(busScore, correct, responsive, rampUp, licenseScore) / 5
+        net_score = net_score(busScore,correct,responsive,rampUp,licenseScore)#sum(busScore, correct, responsive, rampUp, licenseScore) / 5
         URLList.append({URL:{"TotalScore": net_score, "License": licenseScore, "RampUp": rampUp, "BusFactor": busScore, "ResponsiveMaintainers": responsive, "Correct": correct}})
     with open("output.NDJSON", "w") as out:
         ndjson.dumps(URLList,out)

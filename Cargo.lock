@@ -88,4 +88,5 @@ name = "rustlib"
 version = "0.1.0"
 dependencies = [
  "cpython",
+ "regex",
 ]
