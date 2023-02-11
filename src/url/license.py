@@ -1,20 +1,14 @@
 import sys
 import requests
 import base64
-import ctypes
-
-def get_owner_repo(url):
-    ownerRepo = url.replace("https://github.com/", "") # get the owner and repo name separated for api call
-    ownerRepo = ownerRepo.replace(".git", "")
-    return ownerRepo
 
 # Request to get Github Repo License
 def githubLicense(owner, repo, token, licenseList):
     api_Url = f"https://api.github.com/repos/{owner}/{repo}/license"
     headers = {"Authorization": f"{token}"}
     get_license = requests.get(api_Url, headers=headers)
-    
-    # Checks if the API call was successful for the License File
+    print(get_license.status_code)
+    # Checks if the API call was successful for the License File, else looks through README
     if(get_license.status_code != 200):
         readmeLicense = searchReadme(api_Url, headers, token)
         licenseName = "License Error"
@@ -29,26 +23,6 @@ def githubLicense(owner, repo, token, licenseList):
             if(readmeLicense != "No License"):
                 licenseName = readmeLicense
         return licenseName
-
-# NPM API will get Github Repo from it's registry
-def npm_to_git(npm_url):
-    npm_url = npm_url.replace("https://www.npmjs.com/package/", "") # get the package name separated for api call
-    api_Url = f"https://registry.npmjs.org/{npm_url}"
-    get_license2 = requests.get(api_Url)
-    
-    if(get_license2.status_code != 200):
-        print("Error! NPM")
-        return "Error"
-    else:
-        repo_url = get_license2.json()["repository"]["url"]
-        # NPM packages may also use different repositories such as Bitbucket
-        if("github" in repo_url):
-            # Replace all words before github keyword
-            urlIndex = repo_url.index("github")
-            repo_url = "https://" + repo_url[urlIndex:]
-            return repo_url
-        else:
-            return "Not a Github Repository!"
     
 # Gets Github lists of Approved Licenses with LGPL v2.1
 def getLicensesList(git_token):
@@ -100,21 +74,22 @@ def searchReadme(url, headers, git_token):
                 return gitLicense
         return "No License"   
 
-def rust_score(owner, repo, token):
-    license_list = getLicensesList(token)
-    
-    license_name = githubLicense(owner, repo, token, license_list).lower()
-
-    license_list = ", ".join(license_list).lower()    
-    # rust_lib = ctypes.CDLL('target/debug/rustlib.dll')
-    
-    # Call Rust Function with license name in binary
+def license_score(license_name, license_list):
+    # Function for Testing Purposes
     if license_name in license_list:
         return 1.0
     else:
         return 0.0
 
+def license_func(owner, repo, token):
+    license_list = getLicensesList(token)
+    
+    license_name = githubLicense(owner, repo, token, license_list).lower()
+
+    license_list = ", ".join(license_list).lower()    
+    return license_score(license_name, license_list)
+
 if __name__ == "__main__":
     # license_score = 1.0
-    license_score = rust_score(sys.argv[1], sys.argv[2], sys.argv[3])
+    license_score = license_func(sys.argv[1], sys.argv[2], sys.argv[3])
     print(license_score, end="")
