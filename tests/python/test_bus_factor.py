@@ -1,4 +1,4 @@
-from ..src.url.bus_factor import *
+from ...src.url.bus_factor import *
 import os
 def test_busFactor():
     #high bus score
