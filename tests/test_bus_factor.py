@@ -2,9 +2,8 @@ from ..src.url.bus_factor import *
 import os
 def test_busFactor():
     #high bus score
-    if bus_factor("apache","superset",os.getenv("GITHUB_TOKEN")) != 100: return 1
+    assert bus_factor("apache","superset",os.getenv("GITHUB_TOKEN")) == 1.0
     #medium bus score
-    if bus_factor("serenity-bdd","serenity-bdd",os.getenv("GITHUB_TOKEN")) != 75: return 1
+    assert bus_factor("serenity-bdd","serenity-bdd",os.getenv("GITHUB_TOKEN")) == 0.75
     #low bus score
-    if bus_factor("Chise7","ECE461_Team11",os.getenv("GITHUB_TOKEN")) != 0: return 1
-    return 0
+    assert bus_factor("Chise7","ECE461_Team11",os.getenv("GITHUB_TOKEN")) == 0.0
