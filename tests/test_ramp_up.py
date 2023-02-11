@@ -1,6 +1,6 @@
 import os
 import pytest
-from ..Run.ramp_up.ramp_up import *
+from ..src.url.ramp_up_copy import *
 
 USERNAME =  'PC192'
 TOKEN = os.getenv('GITHUB_TOKEN')
