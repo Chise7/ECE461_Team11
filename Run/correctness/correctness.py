@@ -65,9 +65,15 @@ def remove_readonly(func, path, excinfo):
 def get_tags(url):
     path = "GitPython_Test"
     if(os.path.isdir(path)):
-        shutil.rmtree(path, onerror=remove_readonly)
-    repository = Repo.clone_from(url, path)
-        
+        try:
+            shutil.rmtree(path, onerror=remove_readonly)
+        except:
+            print("Error removing dir")
+    try:
+        repository = Repo.clone_from(url, path)
+    except:
+        print("Error cloning from", url)
+        return 0   
     tag_list = []
     tag_not_committed = []
     
