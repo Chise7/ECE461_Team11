@@ -11,5 +11,9 @@ Cargo.lock
 *.pdb
 URL_Fields/
 
-# Misc.
+# Testing
 sample-files/
+test_cases.txt
+
+# GitHub
+.git/

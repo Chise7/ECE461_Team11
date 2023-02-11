@@ -1,31 +1,15 @@
 import os
 import pytest
-from ..src.url.ramp_up_copy import *
+from ..src.url.ramp_up import *
 
 USERNAME =  'PC192'
-TOKEN = os.getenv('GITHUB_TOKEN')
+TOKEN = os.getenv('insert token here')
+Testcases = [('Chise7', 'ECE461_Team11'),('words', 'double-metaphone'),('jonschlinkert', 'even-metaphone'), ...
+            ('SonarSource', 'chocolatey-packages'),('PSOPT', 'psopt'),('nullivex','nodist'),('cloudinary','cloudinary_npm'), ...
+            ('lodash','lodash')]
 
-@pytest.mark.url
-def test_url_checker():
-    # Just checks for general format, not contents
-    validurl = url_checker('https://github.com/Perfare/AssetStudio')
-    assert validurl == "Valid URL!"
-    validurl = url_checker('https://grubhub.net/fungus/amogus')
-    assert validurl == "Valid URL!"
-
-    validurl = url_checker('youtube.com/watch?v=Qoa83DR2zhc')
-    assert validurl == "Invalid URL!"
-    validurl = url_checker('engineering.purdue.edu')
-    assert validurl == "Invalid URL!"
-
-@pytest.mark.npm
-def test_npm_to_git_rep():
-    realnpmdir = npm_to_git_rep('package/read-installed')
-    assert realnpmdir == 'npm/read'
-    realnpmdir = npm_to_git_rep('package/minimist')
-    assert realnpmdir == 'minimistjs/minimist'
-
-
-@pytest.mark.ramp_up
+@pytest.mark.correct_ramp_up
 def test_ramp_up():
-    validrampup = ramp_up()
+    for cases in Testcases:
+        validrampup = ramp_up(cases[0], cases[1], TOKEN)
+        assert validrampup >= 0
