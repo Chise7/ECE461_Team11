@@ -290,3 +290,85 @@ fn read_lines<P>(filename: P) -> io::Result<io::Lines<io::BufReader<File>>> wher
     let file = File::open(filename)?;
     Ok(io::BufReader::new(file).lines())
 }
+
+#[cfg(test)]
+mod tests {
+
+    #[test]
+    #[ignore = "not ready"]
+    fn test_parse_url_file() {
+
+    }
+
+    #[test]
+    #[ignore = "not ready"]
+    fn test_get_token() {
+
+    }
+
+    #[test]
+    #[ignore = "not ready"]
+    fn test_package() {
+
+    }
+
+    #[test]
+    #[ignore = "not ready"]
+    fn test_parse_url() {
+
+    }
+
+    #[test]
+    #[ignore = "not ready"]
+    fn test_package_scores() {
+
+    }
+
+    #[test]
+    #[ignore = "not ready"]
+    fn test_npm_to_git() {
+
+    }
+
+    #[test]
+    #[ignore = "not ready"]
+    fn test_ramp_up_score() {
+
+    }
+
+    #[test]
+    #[ignore = "not ready"]
+    fn test_correctness_score() {
+
+    }
+
+    #[test]
+    #[ignore = "not ready"]
+    fn test_bus_factor_score() {
+
+    }
+
+    #[test]
+    #[ignore = "not ready"]
+    fn test_responsive_maintainer_score() {
+
+    }
+
+    #[test]
+    #[ignore = "not ready"]
+    fn test_license_score() {
+
+    }
+
+    #[test]
+    #[ignore = "not ready"]
+    fn test_net_score() {
+
+    }
+
+    #[test]
+    #[ignore = "not ready"]
+    fn test_read_lines() {
+
+    }
+}
