@@ -1,15 +1,28 @@
-import sys, pytest, os
-from url import ramp_up
+import pytest
+from url.tests.conftest import *
+from url.ramp_up import *
 
-USERNAME =  'PC192'
-TOKEN = os.getenv('GITHUB_TOKEN')
-Testcases = [('Chise7', 'ECE461_Team11'),('words', 'double-metaphone'),('jonschlinkert', 'even'), ('apache', 'airflow'),('PSOPT', 'psopt'),('nullivex','nodist'),('cloudinary','cloudinary_npm'), ('PC192','ChubbyChecker')]
 
-def test_ramp_up():
-    for cases in Testcases:
-        validrampup = ramp_up.ramp_up(cases[0], cases[1], TOKEN)
-        assert validrampup >= 0
-def test_ramp_up_exception():
-    for cases in Testcases:
-        validrampup = ramp_up.ramp_up(cases[0], cases[1]+"bungo", TOKEN)
-        assert validrampup < 0
+@pytest.mark.valid
+def test_get_ramp_up_score_valid():
+    print("\n\ntesting get_ramp_up_score() with valid inputs")
+    for url, owner, repo in VALID_CASES:
+        print(f"test case: ({url}, {owner}, {repo})")
+
+        ramp_up_score = get_ramp_up_score(owner, repo, TOKEN)
+
+        assert type(ramp_up_score) == float
+        assert ramp_up_score >= 0.0
+        assert ramp_up_score <= 1.0
+
+
+@pytest.mark.invalid
+def test_get_ramp_up_score_invalid():
+    print("\n\ntesting get_ramp_up_score() with invalid inptus")
+    for url, owner, repo in INVALID_CASES:
+        print(f"test case: ({url}, {owner}, {repo})")
+
+        ramp_up_score = get_ramp_up_score(owner, repo, TOKEN)
+
+        assert type(ramp_up_score) == float
+        assert ramp_up_score < 0.0

@@ -1,44 +1,42 @@
 import sys
-import requests
+# import requests
 from github import Github
 
-def ramp_up(owner, repo, token):
-
-    repoDir = f"{owner}/{repo}"
-
-    # Evaluating Github Repository contents
-    folderCount = 0
-    folderWeight = 0.75
-    readWeight = (1 - folderWeight)
-    readFound = False
+def get_ramp_up_score(owner, repo, token):
     g = Github(token)
-    checky = requests.get("https://github.com/"+repoDir)
-    if checky.status_code != 200: return -1
-    gitRepo = g.get_repo(repoDir)
-    rootDir = gitRepo.get_contents("")
+    git_repo = g.get_repo(f"{owner}/{repo}")
+
+    folder_count, folder_score = 0, 0.75
+    readme_score = (1 - folder_score)
+    has_readme = False
+
+    # repo_dir = f"{owner}/{repo}"
+
+    # TODO not sure if necessary
+    # Evaluating Github Repository contents
+    # g = Github(token)
+    # checky = requests.get("https://github.com/"+repo_dir)
+    # if checky.status_code != 200: return -1
+    # git_repo = g.get_repo(repo_dir)
 
     # Loop through root contents to check for folders
-    for objects in rootDir:
+    root_dir = git_repo.get_contents("")
+    for objects in root_dir:
         if objects.type == "dir":
-            folderCount += 1
+            folder_count += 1
         if "README" in objects.name or "readme" in objects.name:
             #print("README Found")
-            readFound = True
+            has_readme = True
 
     # Scoring from overall metrics
-    if folderCount <= 7:
-        folderWeight *= 1
-    elif folderCount < 10:
-        folderWeight *= 0.5
-    elif folderCount >= 15:
-        folderWeight *= 0
+    if folder_count <= 7: folder_score *= 1
+    elif folder_count < 10: folder_score *= 0.5
+    elif folder_count >= 15: folder_score *= 0
 
-    if not readFound:
-        readWeight = 0
+    if not has_readme: readme_score = 0
 
-    totalScore = int((folderWeight + readWeight) * 100)
-    return float(totalScore) / 100
+    return float(folder_score + readme_score)
 
 if __name__ == '__main__': # pragma: no cover
-    ramp_up_score = ramp_up(sys.argv[1], sys.argv[2], sys.argv[3])
+    ramp_up_score = get_ramp_up_score(sys.argv[1], sys.argv[2], sys.argv[3])
     print(ramp_up_score, end="")
