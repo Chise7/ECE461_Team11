@@ -7,8 +7,22 @@ cloc:
 clean:
 	cargo clean
 
-test_rm:
+test-all: test-rm test-bus test-correctness test-ramp test-license
+
+test-rm:
 	pytest --pyargs src/url/tests/test_responsive_maintainer.py -s -v
 
+test-bus:
+	pytest --pyargs src/url/tests/test_bus_factor.py -s -v
+
+test-correctness:
+	pytest --pyargs src/url/tests/test_correctness.py -s -v
+
+test-ramp:
+	pytest --pyargs src/url/tests/test_ramp_up.py -s -v
+
+test-license:
+	pytest --pyargs src/url/tests/test_license.py -s -v
+
 .PHONY: tree cloc clean
-.PHONY: test_rm
+.PHONY: test-rm test-bus test-correctness test-ramp test-license test-all
