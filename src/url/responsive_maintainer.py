@@ -45,11 +45,7 @@ def get_rm_score(owner: str, repo: str, token: str) -> float:
     yearly_subscore = get_yearly_subscore(git_repo)
     weekly_subscore = get_weekly_subscore(git_repo)
 
-    rm_score = \
-        0.75 * yearly_subscore + \
-        0.25 * weekly_subscore
-
-    return rm_score
+    return 0.75 * yearly_subscore + 0.25 * weekly_subscore
 
 
 if __name__ == "__main__":
