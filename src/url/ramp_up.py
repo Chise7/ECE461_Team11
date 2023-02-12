@@ -1,4 +1,5 @@
 import sys
+import requests
 from github import Github
 
 def ramp_up(owner, repo, token):
@@ -11,6 +12,8 @@ def ramp_up(owner, repo, token):
     readWeight = (1 - folderWeight)
     readFound = False
     g = Github(token)
+    checky = requests.get(" https://github.com/"+repoDir)
+    if checky.status_code != 200: return -1
     gitRepo = g.get_repo(repoDir)
     rootDir = gitRepo.get_contents("")
 
