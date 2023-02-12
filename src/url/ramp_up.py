@@ -12,7 +12,7 @@ def ramp_up(owner, repo, token):
     readWeight = (1 - folderWeight)
     readFound = False
     g = Github(token)
-    checky = requests.get(" https://github.com/"+repoDir)
+    checky = requests.get("https://github.com/"+repoDir)
     if checky.status_code != 200: return -1
     gitRepo = g.get_repo(repoDir)
     rootDir = gitRepo.get_contents("")
@@ -26,11 +26,11 @@ def ramp_up(owner, repo, token):
             readFound = True
 
     # Scoring from overall metrics
-    if folderCount < 10:
+    if folderCount <= 7:
         folderWeight *= 1
-    elif folderCount < 16:
+    elif folderCount < 10:
         folderWeight *= 0.5
-    elif folderCount >= 16:
+    elif folderCount >= 15:
         folderWeight *= 0
 
     if not readFound:
@@ -39,7 +39,6 @@ def ramp_up(owner, repo, token):
     totalScore = int((folderWeight + readWeight) * 100)
     return float(totalScore) / 100
 
-if __name__ == '__main__':
-    # ramp_up_score = 0.87
+if __name__ == '__main__': # pragma: no cover
     ramp_up_score = ramp_up(sys.argv[1], sys.argv[2], sys.argv[3])
     print(ramp_up_score, end="")
