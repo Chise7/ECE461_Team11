@@ -26,20 +26,27 @@ fn main() {
                     for url in urls.iter() {
                         match get_package(&url) {
                             Ok((owner, repo)) => {
-                                let package_scores = get_package_scores(
+                                match get_package_scores(
                                     &owner, &repo, token.as_str()
-                                ).unwrap();
-                                outputs.push(String::from(format!(
-                                    "{} {:.prec$} {:.prec$} {:.prec$} {:.prec$} {:.prec$} {:.prec$}",
-                                    url,
-                                    package_scores[5],
-                                    package_scores[0],
-                                    package_scores[1],
-                                    package_scores[2],
-                                    package_scores[3],
-                                    package_scores[4],
-                                    prec = 2,
-                                )));
+                                ) {
+                                    Ok(package_scores) => {
+                                        outputs.push(String::from(format!(
+                                            "{} {:.prec$} {:.prec$} {:.prec$} {:.prec$} {:.prec$} {:.prec$}",
+                                            url,
+                                            package_scores[5],
+                                            package_scores[0],
+                                            package_scores[1],
+                                            package_scores[2],
+                                            package_scores[3],
+                                            package_scores[4],
+                                            prec = 2,
+                                        )));
+                                    },
+                                    Err(err) => {
+                                        eprintln!("{}", err);
+                                        exit(EXIT_FAILURE);
+                                    }
+                                }
                             },
                             Err(err) => {
                                 eprintln!("{}", err);
