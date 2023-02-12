@@ -44,13 +44,15 @@ else
         if [ ! -f "Cargo.toml" ]; then
             echo "ERROR: Missing Cargo.toml"
             exit 1
-        else
-            cargo build --release
-            ./target/release/ECE461_Team11 $1
-            exit 0
         fi
-    else
-        ./target/release/ECE461_Team11 $1
-        exit 0
+        cargo build --release
     fi
+
+    if [ -z ${GITHUB_TOKEN} ]; then
+        echo "ERROR: Missing environment variable \$GITHUB_TOKEN"
+        exit 1
+    fi
+
+    ./target/release/ECE461_Team11 $1
+    exit 0
 fi
