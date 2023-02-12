@@ -7,39 +7,50 @@ if [ $# != 1 ]; then
     echo -e "\t./run install"
     echo -e "\t./run test"
     echo -e "\t./run <URL_FILE>"
+    exit 1
 elif [ $1 == "help" -o $1 == "--help" -o $1 == "-h" ]; then
     echo "USAGE:"
     echo -e "\t./run build"
     echo -e "\t./run install"
     echo -e "\t./run test"
     echo -e "\t./run <URL_FILE>"
+    exit 1
 elif [ $1 == "install" ]; then
     if [ ! -f "requirements.txt" ]; then
         echo "ERROR: Missing requirements.txt"
+        exit 1
     else
         pip install --user -r requirements.txt
+        exit 0
     fi
 elif [ $1 == "build" ]; then
     if [ ! -f "Cargo.toml" ]; then
         echo "ERROR: Missing Cargo.toml"
+        exit 1
     else
         cargo build --release
+        exit 0
     fi
 elif [ $1 == "test" ]; then
     if [ ! -f "Cargo.toml" ]; then
         echo "ERROR: Missing Cargo.toml"
+        exit 1
     else
         cargo build
+        exit 0
     fi
 else
     if [ ! -f "target/release/ECE461_Team11" ]; then
         if [ ! -f "Cargo.toml" ]; then
             echo "ERROR: Missing Cargo.toml"
+            exit 1
         else
             cargo build --release
             ./target/release/ECE461_Team11 $1
+            exit 0
         fi
     else
         ./target/release/ECE461_Team11 $1
+        exit 0
     fi
 fi
