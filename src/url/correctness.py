@@ -1,8 +1,8 @@
 import sys
 import requests
 import git
-import stat
-import errno, os, stat, shutil
+import os, shutil
+
 
 def get_downloads(owner, repo, token):
     api_url = f"https://api.github.com/repos/{owner}/{repo}/releases"
@@ -45,15 +45,6 @@ def get_stars(owner, repo, token):
         if(star_count > 1000): stars_score = 0.10
 
     return stars_score
-
-# https://stackoverflow.com/questions/1213706/what-user-do-python-scripts-run-as-in-windows/1214935#1214935
-def handleRemoveReadonly(func, path, exc):
-    excvalue = exc[1]
-    if(func in (os.rmdir, os.remove) and excvalue.errno == errno.EACCES):
-      os.chmod(path, stat.S_IRWXU| stat.S_IRWXG| stat.S_IRWXO) # 0777
-      func(path)
-    else:
-      raise
 
 def get_tags(url):
     path = "Repo-Analysis"
@@ -128,6 +119,5 @@ def correctness_func(owner, repo, token, responsive_maintainer_score):
     return total_score
 
 if __name__ == "__main__":
-    # correctness_score = 0.93
     correctness_score = correctness_func(sys.argv[1], sys.argv[2], sys.argv[3], float(sys.argv[4]))
     print(correctness_score, end="")
