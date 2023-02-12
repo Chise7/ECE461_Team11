@@ -19,6 +19,9 @@ test_cases.txt
 .git/
 Repo-Analysis/
 
+# Output
+*.ndjson
+*.log
+
 # Misc.
 .vscode/
-*.log
