@@ -1,10 +1,9 @@
 from url.license import *
 import os
 
-# Arguements to Simplify Testing
 git_token = os.getenv('GITHUB_TOKEN')
 sample_approved_license_list = ['GNU Lesser General Public License v2.1', 'Apache License 2.0', 'BSD 2-Clause "Simplified" License', 'BSD 3-Clause "New" or "Revised" License', 'Boost Software License 1.0', 'MIT License', 'The Unlicense']
-headers = {"Authorization": f"{git_token}"}
+headers = {"Authorization": f"token {git_token}"}
 all_github_licenses = ['GNU Affero General Public License v3.0', 'Apache License 2.0', 'BSD 2-Clause "Simplified" License', 'BSD 3-Clause "New" or "Revised" License', 'Boost Software License 1.0', 'Creative Commons Zero v1.0 Universal', 'Eclipse Public License 2.0', 'GNU General Public License v2.0', 'GNU General Public License v3.0', 'GNU Lesser General Public License v2.1', 'MIT License', 'Mozilla Public License 2.0', 'The Unlicense']
 license_api_url = f"https://api.github.com/licenses"
 
@@ -50,6 +49,8 @@ def test_searchReadme():
     name = searchReadme(api_Url, headers, git_token)
     assert(name == "mit license")
     
+    # This Repo doesn't have the License in it's readme
     api_Url = f"https://api.github.com/repos/apache/airflow/license"
     name = searchReadme(api_Url, headers, git_token)
-    assert(name == "apache license 2.0")
+    assert(name != "apache license 2.0")
+    assert(name == "No License")
