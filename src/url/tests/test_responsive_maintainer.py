@@ -1,5 +1,5 @@
 import pytest
-import responsive_maintainer
+from url.responsive_maintainer import *
 
 
 USERNAME = 'realkevinkwon'
@@ -8,10 +8,10 @@ TOKEN = 'token'
 
 @pytest.mark.subscores
 def test_get_yearly_commits_subscore():
-    session = responsive_maintainer.requests.Session()
+    session = requests.Session()
     session.auth = (USERNAME, TOKEN)
 
-    yearly_commits_subscore = responsive_maintainer.get_yearly_commits_subscore(
+    yearly_commits_subscore = get_yearly_commits_subscore(
         session=session,
         # owner='openai',
         # repo='openai-cookbook'
@@ -34,10 +34,10 @@ def test_get_yearly_commits_subscore():
 
 @pytest.mark.subscores
 def test_get_weekly_adds_and_dels_subscore():
-    session = responsive_maintainer.requests.Session()
+    session = requests.Session()
     session.auth = (USERNAME, TOKEN)
 
-    weekly_adds_and_dels_subscore = responsive_maintainer.get_weekly_adds_and_dels_subscore(
+    weekly_adds_and_dels_subscore = get_weekly_adds_and_dels_subscore(
         session=session,
         # owner='openai',
         # repo='openai-cookbook'
@@ -60,7 +60,7 @@ def test_get_weekly_adds_and_dels_subscore():
 
 @pytest.mark.score
 def test_get_responsive_maintainer_score():
-    responsive_maintainer_score = responsive_maintainer.get_responsive_maintainer_score(
+    responsive_maintainer_score = get_responsive_maintainer_score(
         owner=USERNAME,
         repo='',
         token='https://github.com/cloudinary/cloudinary_npm'
