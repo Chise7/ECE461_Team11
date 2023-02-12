@@ -8,10 +8,12 @@ all_github_licenses = ['GNU Affero General Public License v3.0', 'Apache License
 license_api_url = f"https://api.github.com/licenses"
 
 # This tests getLicensesList and approved_licenses
+@pytest.mark.valid
 def test_getLicensesList():
-    list_of_licenses = getLicensesList(TOKEN)
+    list_of_licenses = get_license_list(TOKEN)
     assert(list_of_licenses == sample_approved_license_list)
 
+@pytest.mark.valid
 def test_license_score():
     license_name = "MIT License" 
     score = license_score(license_name, sample_approved_license_list)
@@ -28,29 +30,31 @@ def test_license_score():
     assert(score == 0)
     assert(score != 1)
 
+@pytest.mark.valid
 def test_githubLicense():
     # Sample Approved License List Added to avoid overhead
-    name_license = githubLicense("cloudinary", "cloudinary_npm", TOKEN, sample_approved_license_list)
+    name_license = github_license("cloudinary", "cloudinary_npm", TOKEN, sample_approved_license_list)
     assert(name_license == "MIT License" or name_license == "mit license")
     
-    name_license = githubLicense("PSOPT", "psopt", TOKEN, sample_approved_license_list)
+    name_license = github_license("PSOPT", "psopt", TOKEN, sample_approved_license_list)
     assert(name_license == "GNU Lesser General Public License v2.1" or name_license == "gnu lesser general public license v2.1")
     assert(name_license != "MIT License" and name_license != "mit license")
     
-    name_license = githubLicense("nullivex", "nodist", TOKEN, sample_approved_license_list)
+    name_license = github_license("nullivex", "nodist", TOKEN, sample_approved_license_list)
     assert(name_license == "MIT License" or name_license == "mit license")
     
-    name_license = githubLicense("apache", "airflow", TOKEN, sample_approved_license_list)
+    name_license = github_license("apache", "airflow", TOKEN, sample_approved_license_list)
     assert(name_license == "Apache License 2.0" or name_license == "apache license 2.0")
     assert(name_license != "MIT License" and name_license != "mit license")
 
+@pytest.mark.valid
 def test_searchReadme():
     api_Url = f"https://api.github.com/repos/jonschlinkert/even/license"
-    name = searchReadme(api_Url, headers, TOKEN)
+    name = search_readme(api_Url, headers, TOKEN)
     assert(name == "mit license")
     
     # This Repo doesn't have the License in it's readme
     api_Url = f"https://api.github.com/repos/apache/airflow/license"
-    name = searchReadme(api_Url, headers, TOKEN)
+    name = search_readme(api_Url, headers, TOKEN)
     assert(name != "apache license 2.0")
     assert(name == "No License")
