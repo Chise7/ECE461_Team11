@@ -21,3 +21,4 @@ Repo-Analysis/
 
 # Misc.
 .vscode/
+*.log
