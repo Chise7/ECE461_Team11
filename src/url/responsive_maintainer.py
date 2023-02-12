@@ -7,8 +7,7 @@ GITHUB_API_URL = 'https://api.github.com'
 def get_weekly_subscore(git_repo: Repository.Repository) -> float:
     response = git_repo.get_stats_code_frequency()
 
-    weekly_additions = 0
-    weekly_deletions = 0
+    weekly_additions, weekly_deletions = 0, 0
     if response is not None:
         for commit_activity in response:
             if commit_activity is not None:
@@ -16,16 +15,11 @@ def get_weekly_subscore(git_repo: Repository.Repository) -> float:
                 weekly_deletions += commit_activity.deletions
                 
     weekly_adds_and_dels = float(weekly_additions - weekly_deletions)
-    if weekly_adds_and_dels > 10000000:
-        return 1.0
-    elif weekly_adds_and_dels > 1000000:
-        return 0.75
-    elif weekly_adds_and_dels > 100000:
-        return 0.5
-    elif weekly_adds_and_dels > 10000:
-        return 0.25
-    else:
-        return 0.0
+    if weekly_adds_and_dels > 10000000: return 1.0
+    elif weekly_adds_and_dels > 1000000: return 0.75
+    elif weekly_adds_and_dels > 100000: return 0.5
+    elif weekly_adds_and_dels > 10000: return 0.25
+    else: return 0.0
 
 
 def get_yearly_subscore(git_repo: Repository.Repository) -> float:
@@ -37,25 +31,16 @@ def get_yearly_subscore(git_repo: Repository.Repository) -> float:
             if commit_activity is not None:
                 yearly_commits += int(commit_activity.total)
 
-    if yearly_commits > 1000:
-        return 1.0
-    elif yearly_commits > 500:
-        return 0.75
-    elif yearly_commits > 100:
-        return 0.5
-    elif yearly_commits > 10:
-        return 0.25
-    else:
-        return 0.0
+    if yearly_commits > 1000: return 1.0
+    elif yearly_commits > 500: return 0.75
+    elif yearly_commits > 100: return 0.5
+    elif yearly_commits > 10: return 0.25
+    else: return 0.0
 
 
 def get_rm_score(owner: str, repo: str, token: str) -> float:
-    # owner, repo = parse_url(url)
     g = Github(token)
     git_repo = g.get_repo(f"{owner}/{repo}")
-
-    # session = requests.Session()
-    # session.auth = (token)
 
     yearly_subscore = get_yearly_subscore(git_repo)
     weekly_subscore = get_weekly_subscore(git_repo)
