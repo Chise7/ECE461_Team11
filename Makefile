@@ -36,11 +36,11 @@ test-bus-invalid:
 	pytest -m "bus and invalid" $(pytest_flags)
 
 # Correctness tests
-test-correctness:
+test-correct:
 	pytest -m "correct" $(pytest_flags)
-test-correctness-valid:
+test-correct-valid:
 	pytest -m "correct and valid" $(pytest_flags)
-test-correctness-invalid:
+test-correct-invalid:
 	pytest -m "correct and invalid" $(pytest_flags)
 
 # Ramp up tests
@@ -64,6 +64,6 @@ test-license-invalid:
 .PHONY: test test-valid test-invalid
 .PHONY: test-rm test-rm-valid test-rm-invalid test-rm-weekly test-rm-yearly
 .PHONY: test-bus test-bus-valid test-bus-invalid
-.PHONY: test-correctness test-correctness-valid test-correctness-invalid
+.PHONY: test-correct test-correct-valid test-correct-invalid
 .PHONY: test-ramp test-ramp-valid test-ramp-invalid
 .PHONY: test-license test-license-valid test-license-invalid
