@@ -112,7 +112,7 @@ fn parse_url(url: &str) -> Result<(String, String), &'static str> {
 
     if let Some(captures) = RE.captures(url) {
         let source = String::from(&captures[1]);
-        let mut owner = String::from(&captures[2]);
+        let owner = String::from(&captures[2]);
         let repo = String::from(&captures[3]);
 
         if source.eq("npmjs.com") {
@@ -130,11 +130,11 @@ fn parse_url(url: &str) -> Result<(String, String), &'static str> {
 fn get_package_scores(owner: &str, repo: &str, token: &str) -> Result<Vec<f64>, &'static str> {
     let mut package_scores: Vec<f64> = Vec::new();
 
-    let mut ramp_up_score: f64;
-    let mut correctness_score: f64;
-    let mut bus_factor_score: f64;
-    let mut responsive_maintainer_score: f64;
-    let mut license_score: f64;
+    let ramp_up_score: f64;
+    let correctness_score: f64;
+    let bus_factor_score: f64;
+    let responsive_maintainer_score: f64;
+    let license_score: f64;
 
     let mut result: Result<f64, &'static str>;
 
