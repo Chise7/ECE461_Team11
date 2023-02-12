@@ -22,29 +22,29 @@ fn main() {
         Ok(urls) => {
             let mut outputs: Vec<String> = Vec::new();
 
-            let token = get_token();
+            if let Ok(token) = get_token() {
+                for url in urls.iter() {
+                    let (owner, repo): (String, String) = package(&url);
 
-            for url in urls.iter() {
-                let (owner, repo): (String, String) = package(&url);
+                    let package_scores: Vec<f64> = package_scores(&owner, &repo, token.as_str());
+                    outputs.push(String::from(format!("{} {:.prec$} {:.prec$} {:.prec$} {:.prec$} {:.prec$} {:.prec$}",
+                        url,
+                        package_scores[5],
+                        package_scores[0],
+                        package_scores[1],
+                        package_scores[2],
+                        package_scores[3],
+                        package_scores[4],
+                        prec = 2,
+                    )));
+                }
 
-                let package_scores: Vec<f64> = package_scores(&owner, &repo, token.as_str());
-                outputs.push(String::from(format!("{} {:.prec$} {:.prec$} {:.prec$} {:.prec$} {:.prec$} {:.prec$}",
-                    url,
-                    package_scores[5],
-                    package_scores[0],
-                    package_scores[1],
-                    package_scores[2],
-                    package_scores[3],
-                    package_scores[4],
-                    prec = 2,
-                )));
+                for output in outputs.iter() {
+                    println!("{}", output);
+                }
+
+                exit(EXIT_SUCCESS);
             }
-
-            for output in outputs.iter() {
-                println!("{}", output);
-            }
-
-            exit(EXIT_SUCCESS);
         },
         Err(e) => {
             eprintln!("unable to parse file: {}", e);
@@ -76,9 +76,10 @@ fn parse_url_file(url_file: &str) -> Result<Vec<String>, &'static str> {
 
 // TODO error handling
 fn get_token() -> Result<String, &'static str> {
-    match env::var("GITHUB_TOKEN") {
-        Ok(token) => return token,
-        Err(e) => return Err(e)
+    if let Ok(token) = env::var("GITHUB_TOKEN") {
+        return Ok(token);
+    } else {
+        return Err("cannot access environment variable $GITHUB_TOKEN");
     }
 }
 
