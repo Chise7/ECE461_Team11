@@ -4,7 +4,8 @@ from github import Github
 def get_bus_factor_score(owner, repo, token):
     repo_dir = f"{owner}/{repo}"
     g = Github(token)
-    repo = g.get_repo(repo_dir)
+    try: repo = g.get_repo(repo_dir)
+    except: return -1.0
     commits = repo.get_commits()
     authors = []
     for commit in commits:
