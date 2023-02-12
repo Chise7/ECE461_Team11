@@ -1,3 +1,4 @@
+import pytest
 from url.tests.conftest import *
 from url.license import *
 
@@ -7,10 +8,14 @@ all_github_licenses = ['GNU Affero General Public License v3.0', 'Apache License
 license_api_url = f"https://api.github.com/licenses"
 
 # This tests get_license_list and approved_licenses
+@pytest.mark.valid
+@pytest.mark.license
 def test_get_license_list():
     list_of_licenses = get_license_list(TOKEN)
     assert(list_of_licenses == sample_approved_license_list)
 
+@pytest.mark.valid
+@pytest.mark.license
 def test_license_score():
     license_name = "MIT License" 
     score = license_score(license_name, sample_approved_license_list)
@@ -27,6 +32,8 @@ def test_license_score():
     assert(score == 0)
     assert(score != 1)
 
+@pytest.mark.valid
+@pytest.mark.license
 def test_github_license():
     # Sample Approved License List Added to avoid overhead
     name_license = github_license("cloudinary", "cloudinary_npm", TOKEN, sample_approved_license_list)
@@ -43,6 +50,8 @@ def test_github_license():
     assert(name_license == "Apache License 2.0" or name_license == "apache license 2.0")
     assert(name_license != "MIT License" and name_license != "mit license")
 
+@pytest.mark.valid
+@pytest.mark.license
 def test_search_readme():
     api_Url = f"https://api.github.com/repos/jonschlinkert/even/license"
     name = search_readme(api_Url, headers, TOKEN)
