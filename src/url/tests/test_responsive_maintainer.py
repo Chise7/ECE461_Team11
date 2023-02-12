@@ -6,7 +6,7 @@ from url.tests.conftest import TOKEN, TEST_CASES
 
 
 @pytest.mark.weekly
-def test_get_weekly_subscore(git_repo: Repository.Repository):
+def test_get_weekly_subscore():
     print("\n\ntesting get_weekly_subscore()")
 
     g = Github(TOKEN)
