@@ -6,6 +6,7 @@ clean:
 	cargo clean
 
 pytest_flags=-s -v
+test_file=tests/test_cases.txt
 
 # End-to-end tests
 test-run-build:
@@ -15,7 +16,7 @@ test-run-install:
 test-run-test:
 	./run test
 test-run-url:
-	./run test_cases.txt
+	./run $(test_file)
 
 # Run all python unit tests
 test-py:
