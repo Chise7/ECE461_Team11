@@ -10,6 +10,7 @@ def get_bus_factor_score(owner, repo, token):
     authors = []
     for commit in commits:
         if commit is not None and commit.author is not None and commit.author.name not in authors: authors.append(commit.author.name)
+        if len(authors) == 100: return 1.0
     num_of_authors = len(authors)
     if num_of_authors >= 5 and num_of_authors < 100: return 0.75
     elif num_of_authors >= 100: return 1.0
