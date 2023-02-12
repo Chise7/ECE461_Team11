@@ -9,32 +9,6 @@ class Source(Enum):
     GITHUB = 'github.com'
     NPM = 'npmjs.com'
 
-# def parse_url(url: str) -> tuple[str, str]:
-#     pattern = r'\S*('
-#     pattern += Source.GITHUB.value
-#     pattern += '|' + Source.NPM.value
-#     # pattern += '|' + Source.<source_name>.value   # Add new source here
-#     pattern += ')/([a-zA-Z0-9-]+)/([a-zA-Z0-9-_.]+)'
-
-#     # Group 1: source name (including domain),
-#     # Group 2: account name
-#     # Group 3: repository name
-#     result = re.match(pattern, url.lower())
-
-#     owner = ''
-#     repo = ''
-
-#     if result is not None and result.lastindex == 3:
-#         if result[1] == Source.GITHUB.value:
-#             owner = result[2]
-#             repo = result[3]
-#         elif result[1] == Source.NPM.value:
-#             owner = result[2]
-#             repo = result[3]
-
-#     return owner, repo
-
-
 def get_yearly_commits_subscore(session: requests.Session, owner: str, repo: str) -> float:
     while True:
         response = session.get(
