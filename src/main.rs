@@ -75,6 +75,14 @@ fn parse_url_file(url_file: &str) -> Result<Vec<String>, &'static str> {
 }
 
 // TODO error handling
+fn get_token() -> Result<String, &'static str> {
+    match env::var("GITHUB_TOKEN") {
+        Ok(token) => return token,
+        Err(e) => return Err(e)
+    }
+}
+
+// TODO error handling
 fn package(url: &str) -> (String, String) {
     let (owner, repo): (String, String) = parse_url(url);
 
@@ -141,13 +149,6 @@ fn npm_to_git(repo: &str) -> String {
                        .unwrap();
 
     return owner;
-}
-
-// TODO error handling
-fn get_token() -> String {
-    let token = env::var("GITHUB_TOKEN").unwrap();
-
-    return token;
 }
 
 // TODO error handling
