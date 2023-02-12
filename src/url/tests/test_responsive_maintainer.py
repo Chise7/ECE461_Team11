@@ -7,7 +7,7 @@ from github import Github
 @pytest.mark.valid
 @pytest.mark.weekly
 def test_get_weekly_subscore_valid():
-    print("\n\ntesting get_weekly_subscore() with valid inputs")
+    print("\n\ntesting get_weekly_subscore() with valid test cases")
 
     g = Github(TOKEN)
     for url, owner, repo in VALID_TEST_CASES:
@@ -24,7 +24,7 @@ def test_get_weekly_subscore_valid():
 @pytest.mark.invalid
 @pytest.mark.weekly
 def test_get_weekly_subscore_invalid():
-    print("\n\ntesting get_weekly_subscore() with invalid inputs")
+    print("\n\ntesting get_weekly_subscore() with invalid test cases")
 
     g = Github(TOKEN)
     for url, owner, repo in INVALID_TEST_CASES:
@@ -41,7 +41,7 @@ def test_get_weekly_subscore_invalid():
 @pytest.mark.valid
 @pytest.mark.yearly
 def test_get_yearly_subscore_valid():
-    print("\n\ntesting get_yearly_subscore() with valid inputs")
+    print("\n\ntesting get_yearly_subscore() with valid test cases")
 
     g = Github(TOKEN)
     for url, owner, repo in VALID_TEST_CASES:
@@ -58,7 +58,7 @@ def test_get_yearly_subscore_valid():
 @pytest.mark.invalid
 @pytest.mark.yearly
 def test_get_yearly_subscore_invalid():
-    print("\n\ntesting get_yearly_subscore() with invalid inputs")
+    print("\n\ntesting get_yearly_subscore() with invalid test cases")
 
     g = Github(TOKEN)
     for url, owner, repo in INVALID_TEST_CASES:
@@ -75,7 +75,7 @@ def test_get_yearly_subscore_invalid():
 @pytest.mark.valid
 @pytest.mark.rm
 def test_get_rm_score_valid():
-    print("\n\ntesting get_rm_score() with valid inputs")
+    print("\n\ntesting get_rm_score() with valid test cases")
     for url, owner, repo in VALID_TEST_CASES:
         print(f"test case: ({url}, {owner}, {repo})")
 
@@ -89,7 +89,7 @@ def test_get_rm_score_valid():
 @pytest.mark.invalid
 @pytest.mark.rm
 def test_get_rm_score_invalid():
-    print("\n\ntesting get_rm_score() with invalid inputs")
+    print("\n\ntesting get_rm_score() with invalid test cases")
     for url, owner, repo in INVALID_TEST_CASES:
         print(f"test case: ({url}, {owner}, {repo})")
 
