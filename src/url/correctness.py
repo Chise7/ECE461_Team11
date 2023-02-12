@@ -1,7 +1,6 @@
 import sys
 import requests
 import git
-import os
 import stat
 import errno, os, stat, shutil
 
@@ -59,7 +58,7 @@ def handleRemoveReadonly(func, path, exc):
 def get_tags(url):
     path = "Repo-Analysis"
     if(os.path.isdir(path)):
-        os.rmdir(path)
+        shutil.rmtree(path)
         
     repository = git.Repo.clone_from(url, path)
         
