@@ -25,7 +25,7 @@ fn main() {
             match get_token() {
                 Ok(token) => {
                     for url in urls.iter() {
-                        let (owner, repo): (String, String) = package(&url);
+                        let (owner, repo): (String, String) = package(&url).unwrap();
 
                         let package_scores: Vec<f64> = package_scores(
                             &owner, &repo, token.as_str()
@@ -87,16 +87,13 @@ fn get_token() -> Result<String, &'static str> {
     }
 }
 
-// TODO error handling
 fn package(url: &str) -> Result<(String, String), &'static str> {
-    if let Ok((owner, repo)) = parse_url(url) {
-        return Ok((owner, repo));
-    } else {
-        return Err("could not evaluate package");
+    match parse_url(url) {
+        Ok((owner, repo)) => return Ok((owner, repo)),
+        Err(err) => return Err(err)
     }
 }
 
-// TODO error handling
 fn parse_url(url: &str) -> Result<(String, String), &'static str> {
     // Determine source
     lazy_static! {
@@ -111,15 +108,14 @@ fn parse_url(url: &str) -> Result<(String, String), &'static str> {
         let repo = String::from(&captures[3]);
 
         if source.eq("npmjs.com") {
-            if let Ok(owner) = npm_to_git(&repo) {
-                return Ok((owner, repo));
-            } else {
-                return Err("could not get git repo from npm URL");
+            match npm_to_git(&repo) {
+                Ok(owner) => return Ok((owner, repo)),
+                Err(err) => return Err(err)
             }
         }
         return Ok((owner, repo));
     } else {
-        return Err("could not parse URL");
+        return Err("invalid URL");
     }
 }
 
@@ -149,19 +145,18 @@ fn package_scores(owner: &str, repo: &str, token: &str) -> Vec<f64> {
     return package_scores;
 }
 
-// TODO error handling
 fn npm_to_git(repo: &str) -> Result<String, &'static str> {
     if let Ok(py_output) = Command::new("python3")
                                    .arg("src/url/url.py")
                                    .arg(repo)
                                    .output() {
         if let Ok(owner) = String::from_utf8(py_output.stdout) {
-            Ok(owner)
+            return Ok(owner);
         } else {
-            Err("string conversion failed")
+            return Err("string conversion failed");
         }
     } else {
-        Err("command failed")
+        return Err("unable to get npm package owner");
     }
 }
 
