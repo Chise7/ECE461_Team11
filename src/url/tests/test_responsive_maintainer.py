@@ -10,7 +10,7 @@ def test_get_weekly_subscore_valid():
     print("\n\ntesting get_weekly_subscore() with valid inputs")
 
     g = Github(TOKEN)
-    for url, owner, repo in VALID_CASES:
+    for url, owner, repo in VALID_TEST_CASES:
         print(f"test case: ({url}, {owner}, {repo})")
         
         git_repo = g.get_repo(f"{owner}/{repo}")
@@ -27,7 +27,7 @@ def test_get_weekly_subscore_invalid():
     print("\n\ntesting get_weekly_subscore() with invalid inputs")
 
     g = Github(TOKEN)
-    for url, owner, repo in INVALID_CASES:
+    for url, owner, repo in INVALID_TEST_CASES:
         print(f"test case: ({url}, {owner}, {repo})")
         
         git_repo = g.get_repo(f"{owner}/{repo}")
@@ -44,7 +44,7 @@ def test_get_yearly_subscore_valid():
     print("\n\ntesting get_yearly_subscore() with valid inputs")
 
     g = Github(TOKEN)
-    for url, owner, repo in VALID_CASES:
+    for url, owner, repo in VALID_TEST_CASES:
         print(f"test case: ({url}, {owner}, {repo})")
 
         git_repo = g.get_repo(f"{owner}/{repo}")
@@ -61,7 +61,7 @@ def test_get_yearly_subscore_invalid():
     print("\n\ntesting get_yearly_subscore() with invalid inputs")
 
     g = Github(TOKEN)
-    for url, owner, repo in INVALID_CASES:
+    for url, owner, repo in INVALID_TEST_CASES:
         print(f"test case: ({url}, {owner}, {repo})")
 
         git_repo = g.get_repo(f"{owner}/{repo}")
@@ -76,7 +76,7 @@ def test_get_yearly_subscore_invalid():
 @pytest.mark.rm
 def test_get_rm_score_valid():
     print("\n\ntesting get_rm_score() with valid inputs")
-    for url, owner, repo in VALID_CASES:
+    for url, owner, repo in VALID_TEST_CASES:
         print(f"test case: ({url}, {owner}, {repo})")
 
         rm_score = get_rm_score(owner, repo, TOKEN)
@@ -90,7 +90,7 @@ def test_get_rm_score_valid():
 @pytest.mark.rm
 def test_get_rm_score_invalid():
     print("\n\ntesting get_rm_score() with invalid inputs")
-    for url, owner, repo in INVALID_CASES:
+    for url, owner, repo in INVALID_TEST_CASES:
         print(f"test case: ({url}, {owner}, {repo})")
 
         rm_score = get_rm_score(owner, repo, TOKEN)

@@ -2,7 +2,7 @@ import os
 
 result = os.getenv('GITHUB_TOKEN')
 TOKEN = result if result is not None else ""
-VALID_CASES = [
+VALID_TEST_CASES = [
     ("https://www.npmjs.com/package/even", "jonschlinkert", "even"),
     ("https://github.com/jonschlinkert/even", "jonschlinkert", "even"),
     ("https://github.com/SonarSource/chocolatey-packages", "SonarSource", "chocolatey-packages"),
@@ -13,7 +13,7 @@ VALID_CASES = [
     ("https://github.com/cloudinary/cloudinary_npm ", "cloudinary", "cloudinary_npm"),
     ("https://github.com/lodash/lodash", "lodash", "lodash")
 ]
-INVALID_CASES = [
+INVALID_TEST_CASES = [
     ("https://www.github.com/lodash/lodash", "unga", "lodash"), # incorrect owner
     ("https://www.github.com/lodash/lodash", "lodash", "bunga"), # incorrect repo
     ("https://www.github.com/lodash/lodash", "unga", "bunga"), # incorrect owner and repo
