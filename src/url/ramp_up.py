@@ -1,23 +1,15 @@
 import sys
-# import requests
+#import requests
 from github import Github
 
 def get_ramp_up_score(owner, repo, token):
     g = Github(token)
-    git_repo = g.get_repo(f"{owner}/{repo}")
+    try: git_repo = g.get_repo(f"{owner}/{repo}")
+    except: return -1.0
 
     folder_count, folder_score = 0, 0.75
     readme_score = (1 - folder_score)
     has_readme = False
-
-    # repo_dir = f"{owner}/{repo}"
-
-    # TODO not sure if necessary
-    # Evaluating Github Repository contents
-    # g = Github(token)
-    # checky = requests.get("https://github.com/"+repo_dir)
-    # if checky.status_code != 200: return -1
-    # git_repo = g.get_repo(repo_dir)
 
     # Loop through root contents to check for folders
     root_dir = git_repo.get_contents("")
