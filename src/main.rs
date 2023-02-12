@@ -2,7 +2,6 @@
 
 use std::{env, str, path::Path, fs::File, string::String};
 use std::process::{exit, Command};
-use std::error::Error;
 use std::io::{self, BufRead};
 use lazy_static::lazy_static;
 use regex::Regex;
@@ -25,11 +24,11 @@ fn main() {
             match get_token() {
                 Ok(token) => {
                     for url in urls.iter() {
-                        match package(&url) {
+                        match get_package(&url) {
                             Ok((owner, repo)) => {
-                                let package_scores: Vec<f64> = package_scores(
+                                let package_scores = get_package_scores(
                                     &owner, &repo, token.as_str()
-                                );
+                                ).unwrap();
                                 outputs.push(String::from(format!(
                                     "{} {:.prec$} {:.prec$} {:.prec$} {:.prec$} {:.prec$} {:.prec$}",
                                     url,
@@ -46,9 +45,7 @@ fn main() {
                                 eprintln!("{}", err);
                                 exit(EXIT_FAILURE);
                             }
-
                         }
-
                     }
 
                     for output in outputs.iter() {
@@ -98,7 +95,7 @@ fn get_token() -> Result<String, &'static str> {
     }
 }
 
-fn package(url: &str) -> Result<(String, String), &'static str> {
+fn get_package(url: &str) -> Result<(String, String), &'static str> {
     match parse_url(url) {
         Ok((owner, repo)) => return Ok((owner, repo)),
         Err(err) => return Err(err)
@@ -130,15 +127,56 @@ fn parse_url(url: &str) -> Result<(String, String), &'static str> {
     }
 }
 
-// TODO error handling
-fn package_scores(owner: &str, repo: &str, token: &str) -> Vec<f64> {
+fn get_package_scores(owner: &str, repo: &str, token: &str) -> Result<Vec<f64>, &'static str> {
     let mut package_scores: Vec<f64> = Vec::new();
 
-    let ramp_up_score: f64 = ramp_up_score(owner, repo, token);
-    let bus_factor_score: f64 = bus_factor_score(owner, repo, token);
-    let responsive_maintainer_score: f64 = responsive_maintainer_score(owner, repo, token);
-    let license_score: f64 = license_score(owner, repo, token);
-    let correctness_score: f64 = correctness_score(owner, repo, token, responsive_maintainer_score);
+    let mut ramp_up_score: f64;
+    let mut correctness_score: f64;
+    let mut bus_factor_score: f64;
+    let mut responsive_maintainer_score: f64;
+    let mut license_score: f64;
+
+    let mut result: Result<f64, &'static str>;
+
+    result = get_ramp_up_score(owner, repo, token);
+    match result {
+        Ok(score) => {
+            ramp_up_score = score;
+        },
+        Err(err) => return Err(err)
+    }
+
+    result = get_responsive_maintainer_score(owner, repo, token);
+    match result {
+        Ok(score) => {
+            responsive_maintainer_score = score;
+        },
+        Err(err) => return Err(err)
+    }
+
+    result = get_correctness_score(owner, repo, token, responsive_maintainer_score);
+    match result {
+        Ok(score) => {
+            correctness_score = score;
+        },
+        Err(err) => return Err(err)
+    }
+
+    result = get_bus_factor_score(owner, repo, token);
+    match result {
+        Ok(score) => {
+            bus_factor_score = score;
+        },
+        Err(err) => return Err(err)
+    }
+
+    result = get_license_score(owner, repo, token);
+    match result {
+        Ok(score) => {
+            license_score = score;
+        },
+        Err(err) => return Err(err)
+    }
 
     package_scores.push(ramp_up_score);
     package_scores.push(correctness_score);
@@ -153,7 +191,7 @@ fn package_scores(owner: &str, repo: &str, token: &str) -> Vec<f64> {
         license_score
     ));
 
-    return package_scores;
+    return Ok(package_scores);
 }
 
 fn npm_to_git(repo: &str) -> Result<String, &'static str> {
@@ -164,135 +202,142 @@ fn npm_to_git(repo: &str) -> Result<String, &'static str> {
         if let Ok(owner) = String::from_utf8(py_output.stdout) {
             return Ok(owner);
         } else {
-            return Err("string conversion failed");
+            return Err("failed to convert url.py output to string");
         }
     } else {
-        return Err("unable to get npm package owner");
+        return Err("url.py invocation failed");
     }
 }
 
-// TODO error handling
-fn ramp_up_score(owner: &str, repo: &str, token: &str) -> f64 {
-    let py_output = Command::new("python3")
-                            .arg("src/url/ramp_up.py")
-                            .arg(owner)
-                            .arg(repo)
-                            .arg(token)
-                            .output()
-                            .expect("oops");
-
-    let ramp_up_score = String::from_utf8(py_output.stdout)
-                               .unwrap()
-                               .parse::<f64>()
-                               .unwrap();
-
-    // return ramp_up_score;
-    return 0.8;
+fn get_ramp_up_score(owner: &str, repo: &str, token: &str) -> Result<f64, &'static str> {
+    if let Ok(py_output) = Command::new("python3")
+                                   .arg("src/url/ramp_up.py")
+                                   .arg(owner)
+                                   .arg(repo)
+                                   .arg(token)
+                                   .output() {
+        if let Ok(ramp_up_score_str) = String::from_utf8(py_output.stdout) {
+            if let Ok(ramp_up_score) = ramp_up_score_str.parse::<f64>() {
+                return Ok(ramp_up_score);
+            } else {
+                return Err("failed to convert ramp_up.py output to float");
+            }
+        } else {
+            return Err("failed to covert ramp_up.py output to string");
+        }
+    } else {
+        return Err("ramp_up.py invocation failed");
+    }
 }
 
-// TODO error handling
-fn correctness_score(owner: &str, repo: &str, token: &str, responsive_maintainer_score: f64) -> f64 {
-    let rm_score: String = responsive_maintainer_score.to_string();
-
-    let py_output = Command::new("python3")
-                            .arg("src/url/correctness.py")
-                            .arg(owner)
-                            .arg(repo)
-                            .arg(token)
-                            .arg(rm_score)
-                            .output()
-                            .expect("oops");
-
-    let correctness_score = String::from_utf8(py_output.stdout)
-                                   .unwrap()
-                                   .parse::<f64>()
-                                   .unwrap();
-
-    // return correctness_score;
-    return 0.1;
+fn get_correctness_score(owner: &str, repo: &str, token: &str, rm_score: f64) -> Result<f64, &'static str> {
+    if let Ok(py_output) = Command::new("python3") 
+                                   .arg("src/url/correctness.py")
+                                   .arg(owner)
+                                   .arg(repo)
+                                   .arg(token)
+                                   .arg(rm_score.to_string())
+                                   .output() {
+        if let Ok(correctness_score_str) = String::from_utf8(py_output.stdout) {
+            if let Ok(correctness_score) = correctness_score_str.parse::<f64>() {
+                return Ok(correctness_score);
+            } else {
+                return Err("failed to convert correctness.py output to float");
+            }
+        } else {
+            return Err("failed to covert correctness.py output to string");
+        }
+    } else {
+        return Err("correctness.py invocation failed");
+    }
 }
 
-// TODO error handling
-fn bus_factor_score(owner: &str, repo: &str, token: &str) -> f64 {
-    let py_output = Command::new("python3")
-                            .arg("src/url/bus_factor.py")
-                            .arg(owner)
-                            .arg(repo)
-                            .arg(token)
-                            .output()
-                            .expect("oops");
-
-    let bus_factor_score = String::from_utf8(py_output.stdout)
-                                  .unwrap()
-                                  .parse::<f64>()
-                                  .unwrap();
-
-    // return bus_factor_score;
-    return 0.2;
+fn get_bus_factor_score(owner: &str, repo: &str, token: &str) -> Result<f64, &'static str> {
+    if let Ok(py_output) = Command::new("python3")
+                                   .arg("src/url/bus_factor.py")
+                                   .arg(owner)
+                                   .arg(repo)
+                                   .arg(token)
+                                   .output() {
+        if let Ok(bus_factor_score_str) = String::from_utf8(py_output.stdout) {
+            if let Ok(bus_factor_score) = bus_factor_score_str.parse::<f64>() {
+                return Ok(bus_factor_score);
+            } else {
+                return Err("failed to convert bus_factor.py output to float");
+            }
+        } else {
+            return Err("failed to covert bus_factor.py output to string");
+        }
+    } else {
+        return Err("bus_factor.py invocation failed");
+    }
 }
 
-// TODO error handling
-fn responsive_maintainer_score(owner: &str, repo: &str, token: &str) -> f64 {
-    let py_output = Command::new("python3")
-                            .arg("src/url/responsive_maintainer.py")
-                            .arg(owner)
-                            .arg(repo)
-                            .arg(token)
-                            .output()
-                            .expect("oops");
-
-    let responsive_maintainer_score = String::from_utf8(py_output.stdout)
-                                             .unwrap()
-                                             .parse::<f64>()
-                                             .unwrap();
-
-    // return responsive_maintainer_score;
-    return 0.3
+fn get_responsive_maintainer_score(owner: &str, repo: &str, token: &str) -> Result<f64, &'static str> {
+    if let Ok(py_output) = Command::new("python3")
+                                   .arg("src/url/responsive_maintainer.py")
+                                   .arg(owner)
+                                   .arg(repo)
+                                   .arg(token)
+                                   .output() {
+        if let Ok(rm_score_str) = String::from_utf8(py_output.stdout) {
+            if let Ok(rm_score) = rm_score_str.parse::<f64>() {
+                return Ok(rm_score);
+            } else {
+                return Err("failed to convert responsive_maintainer.py output to float");
+            }
+        } else {
+            return Err("failed to convert responsive_maintainer.py output to string");
+        }
+    } else {
+        return Err("responsive_maintainer.py invocation failed");
+    }
 }
 
-// TODO error handling
-fn license_score(owner: &str, repo: &str, token: &str) -> f64 {
-    let py_output = Command::new("python3")
-                            .arg("src/url/license.py")
-                            .arg(owner)
-                            .arg(repo)
-                            .arg(token)
-                            .output()
-                            .expect("oops");
-
-    let license_score = String::from_utf8(py_output.stdout)
-                               .unwrap()
-                               .parse::<f64>()
-                               .unwrap();
-
-    // return license_score;
-    return 1.0;
+fn get_license_score(owner: &str, repo: &str, token: &str) -> Result<f64, &'static str> {
+    if let Ok(py_output) = Command::new("python3")
+                                   .arg("src/url/license.py")
+                                   .arg(owner)
+                                   .arg(repo)
+                                   .arg(token)
+                                   .output() {
+        if let Ok(license_score_str) = String::from_utf8(py_output.stdout) {
+            if let Ok(license_score) = license_score_str.parse::<f64>() {
+                return Ok(license_score);
+            } else {
+                return Err("failed to convert license.py output to float");
+            }
+        } else {
+            return Err("failed to covert license.py output to string");
+        }
+    } else {
+        return Err("license.py invocation failed");
+    }
 }
 
-// TODO error handling
-fn net_score(mut ramp_up_score: f64,
-             mut correctness_score: f64,
-             mut bus_factor_score: f64,
-             mut responsive_maintainer_score: f64,
-             mut license_score: f64)
+fn net_score(ramp_up_score: f64,
+             correctness_score: f64,
+             bus_factor_score: f64,
+             responsive_maintainer_score: f64,
+             license_score: f64)
             -> f64 {
     //These lines deal with errors
     //if the scores return negative this will calculate the score with that subscore as 0
-    if ramp_up_score < 0.0{
-        ramp_up_score = 0.0
-    }
-    if correctness_score < 0.0{
-        correctness_score = 0.0;
-    }
-    if bus_factor_score < 0.0{
-        bus_factor_score = 0.0;
-    }
-    if responsive_maintainer_score < 0.0{
-        responsive_maintainer_score = 0.0;
-    }
-    if license_score < 0.0{
-        license_score = 0.0;
-    }
+    // if ramp_up_score < 0.0{
+    //     ramp_up_score = 0.0
+    // }
+    // if correctness_score < 0.0{
+    //     correctness_score = 0.0;
+    // }
+    // if bus_factor_score < 0.0{
+    //     bus_factor_score = 0.0;
+    // }
+    // if responsive_maintainer_score < 0.0{
+    //     responsive_maintainer_score = 0.0;
+    // }
+    // if license_score < 0.0{
+    //     license_score = 0.0;
+    // }
     let net_score: f64 = 
         license_score * (
             0.3 * ramp_up_score +
@@ -328,7 +373,7 @@ mod tests {
 
     #[test]
     #[ignore = "not ready"]
-    fn test_package() {
+    fn test_get_package() {
 
     }
 
@@ -340,7 +385,7 @@ mod tests {
 
     #[test]
     #[ignore = "not ready"]
-    fn test_package_scores() {
+    fn test_get_package_scores() {
 
     }
 
@@ -352,31 +397,31 @@ mod tests {
 
     #[test]
     #[ignore = "not ready"]
-    fn test_ramp_up_score() {
+    fn test_get_ramp_up_score() {
 
     }
 
     #[test]
     #[ignore = "not ready"]
-    fn test_correctness_score() {
+    fn test_get_correctness_score() {
 
     }
 
     #[test]
     #[ignore = "not ready"]
-    fn test_bus_factor_score() {
+    fn test_get_bus_factor_score() {
 
     }
 
     #[test]
     #[ignore = "not ready"]
-    fn test_responsive_maintainer_score() {
+    fn test_get_responsive_maintainer_score() {
 
     }
 
     #[test]
     #[ignore = "not ready"]
-    fn test_license_score() {
+    fn test_get_license_score() {
 
     }
 
