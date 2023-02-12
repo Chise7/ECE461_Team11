@@ -7,7 +7,7 @@ import shutil
 
 def get_downloads(owner, repo, token):
     api_url = f"https://api.github.com/repos/{owner}/{repo}/releases"
-    headers = {"Authorization": f"{token}"}
+    headers = {"Authorization": f"token {token}"}
     downloads_request = requests.get(api_url, headers=headers)
     releases = downloads_request.json()
     downloads_score = 0.0
@@ -26,24 +26,24 @@ def get_downloads(owner, repo, token):
 
 def get_doc(owner, repo, token):
     api_Url = f"https://api.github.com/repos/{owner}/{repo}/readme"
-    headers = {"Authorization": f"{token}"}
+    headers = {"Authorization": f"token {token}"}
     get_readme = requests.get(api_Url, headers=headers)
     doc_score = 0.0
-    if(get_readme.status_code == 200):
-        doc_score = 0.20
+    
+    if(get_readme.status_code == 200): doc_score = 0.20
 
     return doc_score
 
 def get_stars(owner, repo, token):
     api_url = f"https://api.github.com/repos/{owner}/{repo}"
-    headers = {"Authorization": f"{token}"}
+    headers = {"Authorization": f"token {token}"}
     star_request = requests.get(api_url, headers=headers)
     
     stars_score = 0.0
     if(star_request.status_code == 200):
         star_count = int(star_request.json()["stargazers_count"])
-        if(star_count > 1000):
-            stars_score = 0.10
+        
+        if(star_count > 1000): stars_score = 0.10
 
     return stars_score
 
@@ -72,15 +72,14 @@ def get_tags(url):
         #If more than 95% of Commits are Tagged, get full score
         if((len(tag_list) - len(tag_not_committed)) / len(tag_list) > 0.95):
             tags_score = 0.10
-    else:
-        tags_score = 0.10
+    else: tags_score = 0.10
     return tags_score
 
 def get_issues(owner, repo, token):
     # Base API Call for Total Issues Open and Closed
     api_url_open = f"https://api.github.com/search/issues?q=repo:{owner}/{repo}%20is:issue%20is:open&per_page=1"
     api_url_closed = f"https://api.github.com/search/issues?q=repo:{owner}/{repo}%20is:issue%20is:closed&per_page=1"
-    headers = {"Authorization": f"{token}"}
+    headers = {"Authorization": f"token {token}"}
     
     # Get both Open and Closed Issues Count
     open_issues_request = requests.get(api_url_open, headers=headers)
@@ -89,8 +88,7 @@ def get_issues(owner, repo, token):
     issues_score = 0.0
     if(closed_issues_request.status_code == 200 and open_issues_request.status_code == 200):
         total_count = int(open_issues_request.json()["total_count"]) + int(closed_issues_request.json()["total_count"])
-        if(total_count > 100):
-            issues_score = 0.10
+        if(total_count > 100): issues_score = 0.10
     
     return issues_score
 
@@ -98,7 +96,7 @@ def get_pr(owner, repo, token):
     # Base API Call for Total Pull Requests Open and Closed
     api_url_open = f"https://api.github.com/search/issues?q=repo:{owner}/{repo}%20is:pr%20is:open&per_page=1"
     api_url_closed = f"https://api.github.com/search/issues?q=repo:{owner}/{repo}%20is:pr%20is:closed&per_page=1"
-    headers = {"Authorization": f"{token}"}
+    headers = {"Authorization": f"token {token}"}
     
     # Get both Open and Closed Issues Count
     open_pr_request = requests.get(api_url_open, headers=headers)
@@ -108,8 +106,7 @@ def get_pr(owner, repo, token):
     # More than 100 Pull Requests Made (Open and Closed)
     if(open_pr_request.status_code == 200 and closed_pr_request.status_code == 200):
         total_count = int(open_pr_request.json()["total_count"]) + int(closed_pr_request.json()["total_count"])
-        if(total_count > 100):
-            pr_score = 0.10
+        if(total_count > 100): pr_score = 0.10
     
     return pr_score
 
