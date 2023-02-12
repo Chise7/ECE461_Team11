@@ -1,73 +1,50 @@
 import pytest
 from url.responsive_maintainer import *
 
-
-USERNAME = 'realkevinkwon'
-TOKEN = 'token'
-
-
-@pytest.mark.subscores
-def test_get_yearly_commits_subscore():
-    session = requests.Session()
-    session.auth = (USERNAME, TOKEN)
-
-    yearly_commits_subscore = get_yearly_commits_subscore(
-        session=session,
-        # owner='openai',
-        # repo='openai-cookbook'
-        # owner='nodejs',
-        # repo='node'
-        # owner='LAION-AI',
-        # repo='Open-Assistant'
-        owner='facebook',
-        repo='react'
-        # owner='audacity',
-        # repo='audacity'
-    )
-
-    assert type(yearly_commits_subscore) == float
-    assert yearly_commits_subscore >= 0.0
-    # assert yearly_commits_subscore <= 1.0
-
-    print(yearly_commits_subscore)
+from github import Github, Repository
+from url.tests.conftest import TOKEN, TEST_CASES
 
 
-@pytest.mark.subscores
-def test_get_weekly_adds_and_dels_subscore():
-    session = requests.Session()
-    session.auth = (USERNAME, TOKEN)
+@pytest.mark.weekly
+def test_get_weekly_subscore(git_repo: Repository.Repository):
+    print("testing get_weekly_subscore()")
 
-    weekly_adds_and_dels_subscore = get_weekly_adds_and_dels_subscore(
-        session=session,
-        # owner='openai',
-        # repo='openai-cookbook'
-        # owner='nodejs',
-        # repo='node'
-        # owner='LAION-AI',
-        # repo='Open-Assistant'
-        owner='facebook',
-        repo='react'
-        # owner='audacity',
-        # repo='audacity'
-    )
+    g = Github(TOKEN)
+    for url, owner, repo in TEST_CASES:
+        print(f"test case: ({url}, {owner}, {repo})")
+        
+        git_repo = g.get_repo(f"{owner}/{repo}")
+        weekly_subscore = get_weekly_subscore(git_repo)
 
-    assert type(weekly_adds_and_dels_subscore) == float
-    assert weekly_adds_and_dels_subscore >= 0.0
-    # assert weekly_adds_and_dels_subscore <= 1.0
-
-    print(weekly_adds_and_dels_subscore)
+        assert type(weekly_subscore) == float, print(f"(owner, repo) = {owner}, {repo}")
+        assert weekly_subscore >= 0.0, print(f"(owner, repo) = {owner}, {repo}")
+        assert weekly_subscore <= 1.0, print(f"(owner, repo) = {owner}, {repo}")
 
 
-@pytest.mark.score
-def test_get_responsive_maintainer_score():
-    responsive_maintainer_score = get_responsive_maintainer_score(
-        owner=USERNAME,
-        repo='',
-        token='https://github.com/cloudinary/cloudinary_npm'
-    )
+@pytest.mark.yearly
+def test_get_yearly_subscore():
+    print("testing get_yearly_subscore()")
 
-    assert type(responsive_maintainer_score) == float
-    assert responsive_maintainer_score >= 0.0
-    assert responsive_maintainer_score <= 1.0
+    g = Github(TOKEN)
+    for url, owner, repo in TEST_CASES:
+        print(f"test case: ({url}, {owner}, {repo})")
 
-    print(responsive_maintainer_score)
+        git_repo = g.get_repo(f"{owner}/{repo}")
+        yearly_subscore = get_yearly_subscore(git_repo)
+
+        assert type(yearly_subscore) == float, print(f"(owner, repo) = {owner}, {repo}")
+        assert yearly_subscore >= 0.0, print(f"(owner, repo) = {owner}, {repo}")
+        assert yearly_subscore <= 1.0, print(f"(owner, repo) = {owner}, {repo}")
+
+
+@pytest.mark.rm_score
+def test_get_rm_score():
+    print("testing get_rm_score()")
+    for url, owner, repo in TEST_CASES:
+        print(f"test case: ({url}, {owner}, {repo})")
+
+        rm_score = get_rm_score(owner, repo, TOKEN)
+
+        assert type(rm_score) == float, print(f"(owner, repo) = {owner}, {repo}")
+        assert rm_score >= 0.0, print(f"(owner, repo) = {owner}, {repo}")
+        assert rm_score <= 1.0, print(f"(owner, repo) = {owner}, {repo}")
