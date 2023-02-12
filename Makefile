@@ -5,54 +5,59 @@ cloc:
 clean:
 	cargo clean
 
+pytest_flags=-s -v
+
 # Full test suite
-test: test-valid test-invalid
-test-valid: test-rm-valid test-bus-valid test-correctness-valid test-license-valid
-test-invalid: test-rm-invalid test-bus-invalid test-correctness-invalid test-license-invalid
+test:
+	pytest $(pytest_flags)
+test-valid:
+	pytest -m "valid" $(pytest_flags)
+test-invalid:
+	pytest -m "invalid" $(pytest_flags)
 
 # Responsive maintainer tests
 test-rm:
-	pytest --pyargs src/url/tests/test_responsive_maintainer.py -s -v
+	pytest -m "rm" $(pytest_flags)
 test-rm-valid:
-	pytest --pyargs src/url/tests/test_responsive_maintainer.py -m valid -s -v
+	pytest -m "rm and valid" $(pytest_flags)
 test-rm-invalid:
-	pytest --pyargs src/url/tests/test_responsive_maintainer.py -m invalid -s -v
+	pytest -m "rm and invalid" $(pytest_flags)
 test-rm-weekly:
-	pytest --pyargs src/url/tests/test_responsive_maintainer.py -m weekly -s -v
+	pytest -m "rm and weekly" $(pytest_flags)
 test-rm-yearly:
-	pytest --pyargs src/url/tests/test_responsive_maintainer.py -m yearly -s -v
+	pytest -m "rm and yearly" $(pytest_flags)
 
 # Bus factor tests
 test-bus:
-	pytest --pyargs src/url/tests/test_bus_factor.py -s -v
+	pytest -m "bus" $(pytest_flags)
 test-bus-valid:
-	pytest --pyargs src/url/tests/test_bus_factor.py -m valid -s -v
+	pytest -m "bus and valid" $(pytest_flags)
 test-bus-invalid:
-	pytest --pyargs src/url/tests/test_bus_factor.py -m invalid -s -v
+	pytest -m "bus and invalid" $(pytest_flags)
 
 # Correctness tests
 test-correctness:
-	pytest --pyargs src/url/tests/test_correctness.py -s -v
+	pytest -m "correct" $(pytest_flags)
 test-correctness-valid:
-	pytest --pyargs src/url/tests/test_correctness.py -m valid -s -v
+	pytest -m "correct and valid" $(pytest_flags)
 test-correctness-invalid:
-	pytest --pyargs src/url/tests/test_correctness.py -m invalid -s -v
+	pytest -m "correct and invalid" $(pytest_flags)
 
 # Ramp up tests
 test-ramp:
-	pytest --pyargs src/url/tests/test_ramp_up.py -s -v
+	pytest -m "ramp" $(pytest_flags)
 test-ramp-valid:
-	pytest --pyargs src/url/tests/test_ramp_up.py -m valid -s -v
+	pytest -m "ramp and valid" $(pytest_flags)
 test-ramp-invalid:
-	pytest --pyargs src/url/tests/test_ramp_up.py -m invalid -s -v
+	pytest -m "ramp and invalid" $(pytest_flags)
 
 # License tests
 test-license:
-	pytest --pyargs src/url/tests/test_license.py -s -v
+	pytest -m "license" $(pytest_flags)
 test-license-valid:
-	pytest --pyargs src/url/tests/test_license.py -m valid -s -v
+	pytest -m "license and valid" $(pytest_flags)
 test-license-invalid:
-	pytest --pyargs src/url/tests/test_license.py -m invalid -s -v
+	pytest -m "license and invalid" $(pytest_flags)
 
 # .PHONY targets
 .PHONY: tree cloc clean

@@ -7,13 +7,17 @@ headers = {"Authorization": f"token {TOKEN}"}
 all_github_licenses = ['GNU Affero General Public License v3.0', 'Apache License 2.0', 'BSD 2-Clause "Simplified" License', 'BSD 3-Clause "New" or "Revised" License', 'Boost Software License 1.0', 'Creative Commons Zero v1.0 Universal', 'Eclipse Public License 2.0', 'GNU General Public License v2.0', 'GNU General Public License v3.0', 'GNU Lesser General Public License v2.1', 'MIT License', 'Mozilla Public License 2.0', 'The Unlicense']
 license_api_url = f"https://api.github.com/licenses"
 
+
 # This tests getLicensesList and approved_licenses
 @pytest.mark.valid
+@pytest.mark.license
 def test_getLicensesList():
     list_of_licenses = get_license_list(TOKEN)
     assert(list_of_licenses == sample_approved_license_list)
 
+
 @pytest.mark.valid
+@pytest.mark.license
 def test_license_score():
     license_name = "MIT License" 
     score = license_score(license_name, sample_approved_license_list)
@@ -30,7 +34,9 @@ def test_license_score():
     assert(score == 0)
     assert(score != 1)
 
+
 @pytest.mark.valid
+@pytest.mark.license
 def test_githubLicense():
     # Sample Approved License List Added to avoid overhead
     name_license = github_license("cloudinary", "cloudinary_npm", TOKEN, sample_approved_license_list)
@@ -47,7 +53,9 @@ def test_githubLicense():
     assert(name_license == "Apache License 2.0" or name_license == "apache license 2.0")
     assert(name_license != "MIT License" and name_license != "mit license")
 
+
 @pytest.mark.valid
+@pytest.mark.license
 def test_searchReadme():
     api_Url = f"https://api.github.com/repos/jonschlinkert/even/license"
     name = search_readme(api_Url, headers, TOKEN)

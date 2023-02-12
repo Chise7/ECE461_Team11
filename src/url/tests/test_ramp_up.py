@@ -4,6 +4,7 @@ from url.ramp_up import *
 
 
 @pytest.mark.valid
+@pytest.mark.ramp
 def test_get_ramp_up_score_valid():
     print("\n\ntesting get_ramp_up_score() with valid test cases")
     for url, owner, repo in VALID_TEST_CASES:
@@ -17,6 +18,7 @@ def test_get_ramp_up_score_valid():
 
 
 @pytest.mark.invalid
+@pytest.mark.ramp
 def test_get_ramp_up_score_invalid():
     print("\n\ntesting get_ramp_up_score() with invalid test cases")
     for url, owner, repo in INVALID_TEST_CASES:
