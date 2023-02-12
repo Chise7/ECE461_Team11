@@ -48,12 +48,8 @@ fn main() {
                     }
                     exit(EXIT_SUCCESS);
                 },
-                Err(err) => {
-                    exit(EXIT_FAILURE);
-                }
-            } else {
-                exit(EXIT_FAILURE);
-            }
+                Err(err) => exit(EXIT_FAILURE)
+            }        
         },
         Err(err) => {
             eprintln!("unable to parse file: {}", err);
