@@ -14,9 +14,9 @@ VALID_CASES = [
     ("https://github.com/lodash/lodash", "lodash", "lodash")
 ]
 INVALID_CASES = [
-    ("https://www.github.com/lodash/lodash", "dolash", "lodash"), # incorrect owner
-    ("https://www.github.com/lodash/lodash", "lodash", "dolash"), # incorrect repo
-    ("https://www.github.com/lodash/lodash", "dolash", "dolash"), # incorrect owner and repo
+    ("https://www.github.com/lodash/lodash", "unga", "lodash"), # incorrect owner
+    ("https://www.github.com/lodash/lodash", "lodash", "bunga"), # incorrect repo
+    ("https://www.github.com/lodash/lodash", "unga", "bunga"), # incorrect owner and repo
 ]
 
 # Testcases = [('Chise7', 'ECE461_Team11'),('words', 'double-metaphone'),('jonschlinkert', 'even'), ('apache', 'airflow'),('PSOPT', 'psopt'),('nullivex','nodist'),('cloudinary','cloudinary_npm'), ('PC192','ChubbyChecker')]
