@@ -1,11 +1,10 @@
 #![allow(non_snake_case)]
 
-use std::{env, str, ffi::CStr, path::Path, fs::File, string::String};
+use std::{env, str, path::Path, fs::File, string::String};
 use std::process::{exit, Command};
 use std::io::{self, BufRead};
 use lazy_static::lazy_static;
 use regex::Regex;
-use std::os::raw::{c_char, c_int};
 
 const EXIT_SUCCESS: i32 = 0;
 const EXIT_FAILURE: i32 = 1;
@@ -146,8 +145,8 @@ fn ramp_up_score(owner: &str, repo: &str, token: &str) -> f64 {
                                .parse::<f64>()
                                .unwrap();
 
-    return ramp_up_score;
-    // return 0.8
+    // return ramp_up_score;
+    return 0.8
 }
 
 fn correctness_score(owner: &str, repo: &str, token: &str, responsive_maintainer_score: f64) -> f64 {
@@ -185,8 +184,8 @@ fn bus_factor_score(owner: &str, repo: &str, token: &str) -> f64 {
                                   .parse::<f64>()
                                   .unwrap();
 
-    return bus_factor_score;
-    // return 0.2
+    // return bus_factor_score;
+    return 0.2
 }
 
 fn responsive_maintainer_score(owner: &str, repo: &str, token: &str) -> f64 {
@@ -203,8 +202,8 @@ fn responsive_maintainer_score(owner: &str, repo: &str, token: &str) -> f64 {
                                              .parse::<f64>()
                                              .unwrap();
 
-    return responsive_maintainer_score;
-    // return 0.3
+    // return responsive_maintainer_score;
+    return 0.3
 }
 
 fn license_score(owner: &str, repo: &str, token: &str) -> f64 {
@@ -221,8 +220,8 @@ fn license_score(owner: &str, repo: &str, token: &str) -> f64 {
                                .parse::<f64>()
                                .unwrap();
 
-    return license_score;
-    // return 1.0
+    // return license_score;
+    return 1.0
 }
 
 fn net_score(mut ramp_up_score: f64,
