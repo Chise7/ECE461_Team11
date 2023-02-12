@@ -1,8 +1,6 @@
 import sys
-# import requests
 from github import Github, Repository
 
-GITHUB_API_URL = 'https://api.github.com'
 
 def get_weekly_subscore(git_repo: Repository.Repository) -> float:
     response = git_repo.get_stats_code_frequency()
