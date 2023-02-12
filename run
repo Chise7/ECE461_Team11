@@ -14,15 +14,32 @@ elif [ $1 == "help" -o $1 == "--help" -o $1 == "-h" ]; then
     echo -e "\t./run test"
     echo -e "\t./run <URL_FILE>"
 elif [ $1 == "install" ]; then
-    echo "install"
+    if [ ! -f "requirements.txt" ]; then
+        echo "ERROR: Missing requirements.txt"
+    else
+        pip install --user -r requirements.txt
+    fi
 elif [ $1 == "build" ]; then
-    cargo build --release
-elif [ $1 == "test" ]; then
-    cargo build
-else
-    if [ ! -f "target/release/ECE461_Team11" ]; then
+    if [ ! -f "Cargo.toml" ]; then
+        echo "ERROR: Missing Cargo.toml"
+    else
         cargo build --release
     fi
-    
-    ./target/release/ECE461_Team11 $1
+elif [ $1 == "test" ]; then
+    if [ ! -f "Cargo.toml" ]; then
+        echo "ERROR: Missing Cargo.toml"
+    else
+        cargo build
+    fi
+else
+    if [ ! -f "target/release/ECE461_Team11" ]; then
+        if [ ! -f "Cargo.toml" ]; then
+            echo "ERROR: Missing Cargo.toml"
+        else
+            cargo build --release
+            ./target/release/ECE461_Team11 $1
+        fi
+    else
+        ./target/release/ECE461_Team11 $1
+    fi
 fi
