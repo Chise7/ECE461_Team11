@@ -25,22 +25,30 @@ fn main() {
             match get_token() {
                 Ok(token) => {
                     for url in urls.iter() {
-                        let (owner, repo): (String, String) = package(&url).unwrap();
+                        match package(&url) {
+                            Ok((owner, repo)) => {
+                                let package_scores: Vec<f64> = package_scores(
+                                    &owner, &repo, token.as_str()
+                                );
+                                outputs.push(String::from(format!(
+                                    "{} {:.prec$} {:.prec$} {:.prec$} {:.prec$} {:.prec$} {:.prec$}",
+                                    url,
+                                    package_scores[5],
+                                    package_scores[0],
+                                    package_scores[1],
+                                    package_scores[2],
+                                    package_scores[3],
+                                    package_scores[4],
+                                    prec = 2,
+                                )));
+                            },
+                            Err(err) => {
+                                eprintln!("{}", err);
+                                exit(EXIT_FAILURE);
+                            }
 
-                        let package_scores: Vec<f64> = package_scores(
-                            &owner, &repo, token.as_str()
-                        );
-                        outputs.push(String::from(format!(
-                            "{} {:.prec$} {:.prec$} {:.prec$} {:.prec$} {:.prec$} {:.prec$}",
-                            url,
-                            package_scores[5],
-                            package_scores[0],
-                            package_scores[1],
-                            package_scores[2],
-                            package_scores[3],
-                            package_scores[4],
-                            prec = 2,
-                        )));
+                        }
+
                     }
 
                     for output in outputs.iter() {
@@ -48,11 +56,14 @@ fn main() {
                     }
                     exit(EXIT_SUCCESS);
                 },
-                Err(err) => exit(EXIT_FAILURE)
+                Err(err) => {
+                    eprintln!("{}", err);
+                    exit(EXIT_FAILURE);
+                }
             }        
         },
         Err(err) => {
-            eprintln!("unable to parse file: {}", err);
+            eprintln!("{}", err);
             exit(EXIT_FAILURE);
         }
     }
@@ -75,7 +86,7 @@ fn parse_url_file(url_file: &str) -> Result<Vec<String>, &'static str> {
         return Ok(urls);
 
     } else {
-        return Err("cannot access file");
+        return Err("cannot access file...try checking file permissions");
     }
 }
 
