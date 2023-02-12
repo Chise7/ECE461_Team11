@@ -90,7 +90,7 @@ fn parse_url_file(url_file: &str) -> Result<Vec<String>, &'static str> {
         return Ok(urls);
 
     } else {
-        return Err("cannot access file...try checking file permissions");
+        return Err("Cannot access file...try checking file permissions");
     }
 }
 
@@ -98,7 +98,7 @@ fn get_token() -> Result<String, &'static str> {
     if let Ok(token) = env::var("GITHUB_TOKEN") {
         return Ok(token);
     } else {
-        return Err("cannot access environment variable $GITHUB_TOKEN");
+        return Err("Cannot access environment variable $GITHUB_TOKEN");
     }
 }
 
@@ -130,7 +130,7 @@ fn parse_url(url: &str) -> Result<(String, String), &'static str> {
         }
         return Ok((owner, repo));
     } else {
-        return Err("invalid URL");
+        return Err("Invalid URL");
     }
 }
 
@@ -209,7 +209,7 @@ fn npm_to_git(repo: &str) -> Result<String, &'static str> {
         if let Ok(owner) = String::from_utf8(py_output.stdout) {
             return Ok(owner);
         } else {
-            return Err("failed to convert url.py output to string");
+            return Err("Failed to convert url.py output to string");
         }
     } else {
         return Err("url.py invocation failed");
@@ -227,10 +227,10 @@ fn get_ramp_up_score(owner: &str, repo: &str, token: &str) -> Result<f64, &'stat
             if let Ok(ramp_up_score) = ramp_up_score_str.parse::<f64>() {
                 return Ok(ramp_up_score);
             } else {
-                return Err("failed to convert ramp_up.py output to float");
+                return Err("Failed to convert ramp_up.py output to float");
             }
         } else {
-            return Err("failed to covert ramp_up.py output to string");
+            return Err("Failed to covert ramp_up.py output to string");
         }
     } else {
         return Err("ramp_up.py invocation failed");
@@ -249,10 +249,10 @@ fn get_correctness_score(owner: &str, repo: &str, token: &str, rm_score: f64) ->
             if let Ok(correctness_score) = correctness_score_str.parse::<f64>() {
                 return Ok(correctness_score);
             } else {
-                return Err("failed to convert correctness.py output to float");
+                return Err("Failed to convert correctness.py output to float");
             }
         } else {
-            return Err("failed to covert correctness.py output to string");
+            return Err("Failed to covert correctness.py output to string");
         }
     } else {
         return Err("correctness.py invocation failed");
@@ -270,10 +270,10 @@ fn get_bus_factor_score(owner: &str, repo: &str, token: &str) -> Result<f64, &'s
             if let Ok(bus_factor_score) = bus_factor_score_str.parse::<f64>() {
                 return Ok(bus_factor_score);
             } else {
-                return Err("failed to convert bus_factor.py output to float");
+                return Err("Failed to convert bus_factor.py output to float");
             }
         } else {
-            return Err("failed to covert bus_factor.py output to string");
+            return Err("Failed to covert bus_factor.py output to string");
         }
     } else {
         return Err("bus_factor.py invocation failed");
@@ -291,10 +291,10 @@ fn get_responsive_maintainer_score(owner: &str, repo: &str, token: &str) -> Resu
             if let Ok(rm_score) = rm_score_str.parse::<f64>() {
                 return Ok(rm_score);
             } else {
-                return Err("failed to convert responsive_maintainer.py output to float");
+                return Err("Failed to convert responsive_maintainer.py output to float");
             }
         } else {
-            return Err("failed to convert responsive_maintainer.py output to string");
+            return Err("Failed to convert responsive_maintainer.py output to string");
         }
     } else {
         return Err("responsive_maintainer.py invocation failed");
@@ -312,10 +312,10 @@ fn get_license_score(owner: &str, repo: &str, token: &str) -> Result<f64, &'stat
             if let Ok(license_score) = license_score_str.parse::<f64>() {
                 return Ok(license_score);
             } else {
-                return Err("failed to convert license.py output to float");
+                return Err("Failed to convert license.py output to float");
             }
         } else {
-            return Err("failed to covert license.py output to string");
+            return Err("Failed to covert license.py output to string");
         }
     } else {
         return Err("license.py invocation failed");
