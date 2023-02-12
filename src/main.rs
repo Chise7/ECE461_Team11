@@ -88,14 +88,16 @@ fn get_token() -> Result<String, &'static str> {
 }
 
 // TODO error handling
-fn package(url: &str) -> (String, String) {
-    let (owner, repo): (String, String) = parse_url(url);
-
-    return (owner, repo);
+fn package(url: &str) -> Result<(String, String), &'static str> {
+    if let Ok((owner, repo)) = parse_url(url) {
+        return Ok((owner, repo));
+    } else {
+        return Err("could not evaluate package");
+    }
 }
 
 // TODO error handling
-fn parse_url(url: &str) -> (String, String) {
+fn parse_url(url: &str) -> Result<(String, String), &'static str> {
     // Determine source
     lazy_static! {
         static ref RE: Regex = Regex::new(
@@ -103,17 +105,22 @@ fn parse_url(url: &str) -> (String, String) {
         ).unwrap();
     }
 
-    // &RE.captures(url).unwrap()
+    if let Some(captures) = RE.captures(url) {
+        let source = String::from(&captures[1]);
+        let mut owner = String::from(&captures[2]);
+        let repo = String::from(&captures[3]);
 
-    let source = String::from(&RE.captures(url).unwrap()[1]);
-    let mut owner = String::from(&RE.captures(url).unwrap()[2]);
-    let repo = String::from(&RE.captures(url).unwrap()[3]);
-
-    if source.eq("npmjs.com") {
-        owner = npm_to_git(&repo);
+        if source.eq("npmjs.com") {
+            if let Ok(owner) = npm_to_git(&repo) {
+                return Ok((owner, repo));
+            } else {
+                return Err("could not get git repo from npm URL");
+            }
+        }
+        return Ok((owner, repo));
+    } else {
+        return Err("could not parse URL");
     }
-
-    return (owner, repo);
 }
 
 // TODO error handling
@@ -143,17 +150,19 @@ fn package_scores(owner: &str, repo: &str, token: &str) -> Vec<f64> {
 }
 
 // TODO error handling
-fn npm_to_git(repo: &str) -> String {
-    let py_output = Command::new("python3")
-                            .arg("src/url/url.py")
-                            .arg(repo)
-                            .output()
-                            .expect("oops");
-
-    let owner = String::from_utf8(py_output.stdout)
-                       .unwrap();
-
-    return owner;
+fn npm_to_git(repo: &str) -> Result<String, &'static str> {
+    if let Ok(py_output) = Command::new("python3")
+                                   .arg("src/url/url.py")
+                                   .arg(repo)
+                                   .output() {
+        if let Ok(owner) = String::from_utf8(py_output.stdout) {
+            Ok(owner)
+        } else {
+            Err("string conversion failed")
+        }
+    } else {
+        Err("command failed")
+    }
 }
 
 // TODO error handling
@@ -172,7 +181,7 @@ fn ramp_up_score(owner: &str, repo: &str, token: &str) -> f64 {
                                .unwrap();
 
     // return ramp_up_score;
-    return 0.8
+    return 0.8;
 }
 
 // TODO error handling
@@ -194,7 +203,7 @@ fn correctness_score(owner: &str, repo: &str, token: &str, responsive_maintainer
                                    .unwrap();
 
     // return correctness_score;
-    return 0.1
+    return 0.1;
 }
 
 // TODO error handling
@@ -213,7 +222,7 @@ fn bus_factor_score(owner: &str, repo: &str, token: &str) -> f64 {
                                   .unwrap();
 
     // return bus_factor_score;
-    return 0.2
+    return 0.2;
 }
 
 // TODO error handling
@@ -251,7 +260,7 @@ fn license_score(owner: &str, repo: &str, token: &str) -> f64 {
                                .unwrap();
 
     // return license_score;
-    return 1.0
+    return 1.0;
 }
 
 // TODO error handling
