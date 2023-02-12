@@ -7,12 +7,22 @@ clean:
 
 pytest_flags=-s -v
 
-# Full test suite
-test:
+# End-to-end tests
+test-run-build:
+	./run build
+test-run-install:
+	./run install
+test-run-test:
+	./run test
+test-run-url:
+	./run test_cases.txt
+
+# Run all python unit tests
+test-py:
 	pytest $(pytest_flags)
-test-valid:
+test-py-valid:
 	pytest -m "valid" $(pytest_flags)
-test-invalid:
+test-py-invalid:
 	pytest -m "invalid" $(pytest_flags)
 
 # Responsive maintainer tests
@@ -61,7 +71,8 @@ test-license-invalid:
 
 # .PHONY targets
 .PHONY: tree cloc clean
-.PHONY: test test-valid test-invalid
+.PHONY: test-run-build test-run-install test-run-test test-run-url
+.PHONY: test-py test-py-valid test-py-invalid
 .PHONY: test-rm test-rm-valid test-rm-invalid test-rm-weekly test-rm-yearly
 .PHONY: test-bus test-bus-valid test-bus-invalid
 .PHONY: test-correct test-correct-valid test-correct-invalid
