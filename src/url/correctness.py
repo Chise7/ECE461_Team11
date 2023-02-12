@@ -116,7 +116,7 @@ def correctness_func(owner, repo, token, responsive_maintainer_score):
         1.0 * get_pr(owner, repo, token)+ \
         0.3 * responsive_maintainer_score
 
-    return total_score
+    return round(total_score, 2)
 
 if __name__ == "__main__":
     correctness_score = correctness_func(sys.argv[1], sys.argv[2], sys.argv[3], float(sys.argv[4]))
