@@ -2,6 +2,7 @@
 
 use std::{env, str, path::Path, fs::File, string::String};
 use std::process::{exit, Command};
+use std::error::Error;
 use std::io::{self, BufRead};
 use lazy_static::lazy_static;
 use regex::Regex;
@@ -11,38 +12,98 @@ const EXIT_FAILURE: i32 = 1;
 
 fn main() {
     let args: Vec<String> = env::args().collect();
-    let mut outputs: Vec<String> = Vec::new();
 
-    if Path::new(args[1].as_str()).exists() {
-        let urls: Vec<String> = parse_url_file(args[1].as_str());
-        let token = get_token();
-
-        for url in urls.iter() {
-            let (owner, repo): (String, String) = package(&url);
-
-            let package_scores: Vec<f64> = package_scores(&owner, &repo, token.as_str());
-            outputs.push(String::from(format!("{} {:.prec$} {:.prec$} {:.prec$} {:.prec$} {:.prec$} {:.prec$}",
-                url,
-                package_scores[5],
-                package_scores[0],
-                package_scores[1],
-                package_scores[2],
-                package_scores[3],
-                package_scores[4],
-                prec = 2,
-            )));
-        }
-
-        for output in outputs.iter() {
-            println!("{}", output);
-        }
-        exit(EXIT_SUCCESS);
-    } else {
-        println!("ERROR: File does not exist");
+    if args.len() != 2 {
+        eprintln!("Not enough arguments");
         exit(EXIT_FAILURE);
+    }
+
+    match parse_url_file(args[1].as_str()) {
+        Ok(urls) => {
+            let mut outputs: Vec<String> = Vec::new();
+
+            let token = get_token();
+
+            for url in urls.iter() {
+                let (owner, repo): (String, String) = package(&url);
+
+                let package_scores: Vec<f64> = package_scores(&owner, &repo, token.as_str());
+                outputs.push(String::from(format!("{} {:.prec$} {:.prec$} {:.prec$} {:.prec$} {:.prec$} {:.prec$}",
+                    url,
+                    package_scores[5],
+                    package_scores[0],
+                    package_scores[1],
+                    package_scores[2],
+                    package_scores[3],
+                    package_scores[4],
+                    prec = 2,
+                )));
+            }
+
+            for output in outputs.iter() {
+                println!("{}", output);
+            }
+
+            exit(EXIT_SUCCESS);
+        },
+        Err(e) => {
+            eprintln!("unable to parse file: {}", e);
+            exit(EXIT_FAILURE);
+        }
     }
 }
 
+fn parse_url_file(url_file: &str) -> Result<Vec<String>, &'static str> {
+    // Check to see if file exists
+    if Path::new(url_file).exists() {
+        let mut urls: Vec<String> = Vec::new();
+
+        // Read URLs from file
+        if let Ok(lines) = read_lines(url_file) {
+            for line in lines {
+                if let Ok(url) = line {
+                    urls.push(url);
+                }
+            }
+        }
+
+        return Ok(urls);
+
+    } else {
+        return Err("cannot access file");
+    }
+}
+
+// TODO error handling
+fn package(url: &str) -> (String, String) {
+    let (owner, repo): (String, String) = parse_url(url);
+
+    return (owner, repo);
+}
+
+// TODO error handling
+fn parse_url(url: &str) -> (String, String) {
+    // Determine source
+    lazy_static! {
+        static ref RE: Regex = Regex::new(
+            r"\S*(github.com|npmjs.com)/([a-zA-Z0-9-]+)/([a-zA-Z0-9-_.]+)"
+        ).unwrap();
+    }
+
+    // &RE.captures(url).unwrap()
+
+    let source = String::from(&RE.captures(url).unwrap()[1]);
+    let mut owner = String::from(&RE.captures(url).unwrap()[2]);
+    let repo = String::from(&RE.captures(url).unwrap()[3]);
+
+    if source.eq("npmjs.com") {
+        owner = npm_to_git(&repo);
+    }
+
+    return (owner, repo);
+}
+
+// TODO error handling
 fn package_scores(owner: &str, repo: &str, token: &str) -> Vec<f64> {
     let mut package_scores: Vec<f64> = Vec::new();
 
@@ -68,33 +129,7 @@ fn package_scores(owner: &str, repo: &str, token: &str) -> Vec<f64> {
     return package_scores;
 }
 
-fn package(url: &str) -> (String, String) {
-    let (owner, repo): (String, String) = parse_url(url);
-
-    return (owner, repo);
-}
-
-fn parse_url(url: &str) -> (String, String) {
-    // Determine source
-    lazy_static! {
-        static ref RE: Regex = Regex::new(
-            r"\S*(github.com|npmjs.com)/([a-zA-Z0-9-]+)/([a-zA-Z0-9-_.]+)"
-        ).unwrap();
-    }
-
-    // &RE.captures(url).unwrap()
-
-    let source = String::from(&RE.captures(url).unwrap()[1]);
-    let mut owner = String::from(&RE.captures(url).unwrap()[2]);
-    let repo = String::from(&RE.captures(url).unwrap()[3]);
-
-    if source.eq("npmjs.com") {
-        owner = npm_to_git(&repo);
-    }
-
-    return (owner, repo);
-}
-
+// TODO error handling
 fn npm_to_git(repo: &str) -> String {
     let py_output = Command::new("python3")
                             .arg("src/url/url.py")
@@ -108,29 +143,14 @@ fn npm_to_git(repo: &str) -> String {
     return owner;
 }
 
-fn parse_url_file(url_file: &str) -> Vec<String> {
-    let mut urls: Vec<String> = Vec::new();
-
-    // Read URLs from file
-    if let Ok(lines) = read_lines(url_file) {
-        for line in lines {
-            if let Ok(url) = line {
-                urls.push(url);
-            }
-        }
-    }
-
-    return urls;
-}
-
+// TODO error handling
 fn get_token() -> String {
     let token = env::var("GITHUB_TOKEN").unwrap();
 
     return token;
 }
 
-// Code adapted from "PyO3 user guide: 7."
-// url: "https://pyo3.rs/v0.18.0/python_from_rust.html"
+// TODO error handling
 fn ramp_up_score(owner: &str, repo: &str, token: &str) -> f64 {
     let py_output = Command::new("python3")
                             .arg("src/url/ramp_up.py")
@@ -149,6 +169,7 @@ fn ramp_up_score(owner: &str, repo: &str, token: &str) -> f64 {
     return 0.8
 }
 
+// TODO error handling
 fn correctness_score(owner: &str, repo: &str, token: &str, responsive_maintainer_score: f64) -> f64 {
     let rm_score: String = responsive_maintainer_score.to_string();
 
@@ -170,6 +191,7 @@ fn correctness_score(owner: &str, repo: &str, token: &str, responsive_maintainer
     return 0.1
 }
 
+// TODO error handling
 fn bus_factor_score(owner: &str, repo: &str, token: &str) -> f64 {
     let py_output = Command::new("python3")
                             .arg("src/url/bus_factor.py")
@@ -188,6 +210,7 @@ fn bus_factor_score(owner: &str, repo: &str, token: &str) -> f64 {
     return 0.2
 }
 
+// TODO error handling
 fn responsive_maintainer_score(owner: &str, repo: &str, token: &str) -> f64 {
     let py_output = Command::new("python3")
                             .arg("src/url/responsive_maintainer.py")
@@ -206,6 +229,7 @@ fn responsive_maintainer_score(owner: &str, repo: &str, token: &str) -> f64 {
     return 0.3
 }
 
+// TODO error handling
 fn license_score(owner: &str, repo: &str, token: &str) -> f64 {
     let py_output = Command::new("python3")
                             .arg("src/url/license.py")
@@ -224,6 +248,7 @@ fn license_score(owner: &str, repo: &str, token: &str) -> f64 {
     return 1.0
 }
 
+// TODO error handling
 fn net_score(mut ramp_up_score: f64,
              mut correctness_score: f64,
              mut bus_factor_score: f64,
