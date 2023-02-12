@@ -19,55 +19,55 @@ test-run-url:
 
 # Run all python unit tests
 test-py:
-	pytest $(pytest_flags)
+	python3 -m pytest $(pytest_flags)
 test-py-valid:
-	pytest -m "valid" $(pytest_flags)
+	python3 -m pytest -m "valid" $(pytest_flags)
 test-py-invalid:
-	pytest -m "invalid" $(pytest_flags)
+	python3 -m pytest -m "invalid" $(pytest_flags)
 
 # Responsive maintainer tests
 test-rm:
-	pytest -m "rm" $(pytest_flags)
+	python3 -m pytest -m "rm" $(pytest_flags)
 test-rm-valid:
-	pytest -m "rm and valid" $(pytest_flags)
+	python3 -m pytest -m "rm and valid" $(pytest_flags)
 test-rm-invalid:
-	pytest -m "rm and invalid" $(pytest_flags)
+	python3 -m pytest -m "rm and invalid" $(pytest_flags)
 test-rm-weekly:
-	pytest -m "rm and weekly" $(pytest_flags)
+	python3 -m pytest -m "rm and weekly" $(pytest_flags)
 test-rm-yearly:
-	pytest -m "rm and yearly" $(pytest_flags)
+	python3 -m pytest -m "rm and yearly" $(pytest_flags)
 
 # Bus factor tests
 test-bus:
-	pytest -m "bus" $(pytest_flags)
+	python3 -m pytest -m "bus" $(pytest_flags)
 test-bus-valid:
-	pytest -m "bus and valid" $(pytest_flags)
+	python3 -m pytest -m "bus and valid" $(pytest_flags)
 test-bus-invalid:
-	pytest -m "bus and invalid" $(pytest_flags)
+	python3 -m pytest -m "bus and invalid" $(pytest_flags)
 
 # Correctness tests
 test-correct:
-	pytest -m "correct" $(pytest_flags)
+	python3 -m pytest -m "correct" $(pytest_flags)
 test-correct-valid:
-	pytest -m "correct and valid" $(pytest_flags)
+	python3 -m pytest -m "correct and valid" $(pytest_flags)
 test-correct-invalid:
-	pytest -m "correct and invalid" $(pytest_flags)
+	python3 -m pytest -m "correct and invalid" $(pytest_flags)
 
 # Ramp up tests
 test-ramp:
-	pytest -m "ramp" $(pytest_flags)
+	python3 -m pytest -m "ramp" $(pytest_flags)
 test-ramp-valid:
-	pytest -m "ramp and valid" $(pytest_flags)
+	python3 -m pytest -m "ramp and valid" $(pytest_flags)
 test-ramp-invalid:
-	pytest -m "ramp and invalid" $(pytest_flags)
+	python3 -m pytest -m "ramp and invalid" $(pytest_flags)
 
 # License tests
 test-license:
-	pytest -m "license" $(pytest_flags)
+	python3 -m pytest -m "license" $(pytest_flags)
 test-license-valid:
-	pytest -m "license and valid" $(pytest_flags)
+	python3 -m pytest -m "license and valid" $(pytest_flags)
 test-license-invalid:
-	pytest -m "license and invalid" $(pytest_flags)
+	python3 -m pytest -m "license and invalid" $(pytest_flags)
 
 # .PHONY targets
 .PHONY: tree cloc clean
