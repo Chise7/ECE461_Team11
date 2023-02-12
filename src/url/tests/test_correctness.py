@@ -2,7 +2,6 @@ import pytest
 from url.tests.conftest import *
 from url.correctness import *
 
-
 @pytest.mark.valid
 @pytest.mark.correct
 def test_get_doc():
@@ -78,6 +77,6 @@ def test_get_pr():
 def test_get_tags():
     tag_score = get_tags("https://github.com/jonschlinkert/even")
     assert(tag_score == 0.10)
-    
+
     tag_score = get_tags("https://github.com/lodash/lodash")
     assert(tag_score == 0.0)

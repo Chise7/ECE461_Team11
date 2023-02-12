@@ -3,7 +3,7 @@ import requests
 import git
 import os
 import stat
-import shutil
+import errno, os, stat, shutil
 
 def get_downloads(owner, repo, token):
     api_url = f"https://api.github.com/repos/{owner}/{repo}/releases"
@@ -47,16 +47,20 @@ def get_stars(owner, repo, token):
 
     return stars_score
 
-# https://stackoverflow.com/questions/1889597/deleting-read-only-directory-in-python/1889686#1889686
-def remove_readonly(func, path, excinfo):
-    os.chmod(path, stat.S_IWRITE)
-    func(path)
-    return 0
+# https://stackoverflow.com/questions/1213706/what-user-do-python-scripts-run-as-in-windows/1214935#1214935
+def handleRemoveReadonly(func, path, exc):
+    excvalue = exc[1]
+    if(func in (os.rmdir, os.remove) and excvalue.errno == errno.EACCES):
+      os.chmod(path, stat.S_IRWXU| stat.S_IRWXG| stat.S_IRWXO) # 0777
+      func(path)
+    else:
+      raise
 
 def get_tags(url):
-    path = "URL_Fields/LR-Test"
+    path = "Repo-Analysis"
     if(os.path.isdir(path)):
-        shutil.rmtree(path, onerror=remove_readonly)
+        os.rmdir(path)
+        
     repository = git.Repo.clone_from(url, path)
         
     tag_list = []
