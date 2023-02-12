@@ -22,32 +22,37 @@ fn main() {
         Ok(urls) => {
             let mut outputs: Vec<String> = Vec::new();
 
-            let token = get_token();
+            match get_token() {
+                Ok(token) => {
+                    for url in urls.iter() {
+                        let (owner, repo): (String, String) = package(&url).unwrap();
 
-            for url in urls.iter() {
-                let (owner, repo): (String, String) = package(&url);
+                        let package_scores: Vec<f64> = package_scores(
+                            &owner, &repo, token.as_str()
+                        );
+                        outputs.push(String::from(format!(
+                            "{} {:.prec$} {:.prec$} {:.prec$} {:.prec$} {:.prec$} {:.prec$}",
+                            url,
+                            package_scores[5],
+                            package_scores[0],
+                            package_scores[1],
+                            package_scores[2],
+                            package_scores[3],
+                            package_scores[4],
+                            prec = 2,
+                        )));
+                    }
 
-                let package_scores: Vec<f64> = package_scores(&owner, &repo, token.as_str());
-                outputs.push(String::from(format!("{} {:.prec$} {:.prec$} {:.prec$} {:.prec$} {:.prec$} {:.prec$}",
-                    url,
-                    package_scores[5],
-                    package_scores[0],
-                    package_scores[1],
-                    package_scores[2],
-                    package_scores[3],
-                    package_scores[4],
-                    prec = 2,
-                )));
-            }
-
-            for output in outputs.iter() {
-                println!("{}", output);
-            }
-
-            exit(EXIT_SUCCESS);
+                    for output in outputs.iter() {
+                        println!("{}", output);
+                    }
+                    exit(EXIT_SUCCESS);
+                },
+                Err(err) => exit(EXIT_FAILURE)
+            }        
         },
-        Err(e) => {
-            eprintln!("unable to parse file: {}", e);
+        Err(err) => {
+            eprintln!("unable to parse file: {}", err);
             exit(EXIT_FAILURE);
         }
     }
@@ -74,23 +79,22 @@ fn parse_url_file(url_file: &str) -> Result<Vec<String>, &'static str> {
     }
 }
 
-// TODO error handling
 fn get_token() -> Result<String, &'static str> {
-    match env::var("GITHUB_TOKEN") {
-        Ok(token) => return token,
-        Err(e) => return Err(e)
+    if let Ok(token) = env::var("GITHUB_TOKEN") {
+        return Ok(token);
+    } else {
+        return Err("cannot access environment variable $GITHUB_TOKEN");
     }
 }
 
-// TODO error handling
-fn package(url: &str) -> (String, String) {
-    let (owner, repo): (String, String) = parse_url(url);
-
-    return (owner, repo);
+fn package(url: &str) -> Result<(String, String), &'static str> {
+    match parse_url(url) {
+        Ok((owner, repo)) => return Ok((owner, repo)),
+        Err(err) => return Err(err)
+    }
 }
 
-// TODO error handling
-fn parse_url(url: &str) -> (String, String) {
+fn parse_url(url: &str) -> Result<(String, String), &'static str> {
     // Determine source
     lazy_static! {
         static ref RE: Regex = Regex::new(
@@ -98,17 +102,21 @@ fn parse_url(url: &str) -> (String, String) {
         ).unwrap();
     }
 
-    // &RE.captures(url).unwrap()
+    if let Some(captures) = RE.captures(url) {
+        let source = String::from(&captures[1]);
+        let mut owner = String::from(&captures[2]);
+        let repo = String::from(&captures[3]);
 
-    let source = String::from(&RE.captures(url).unwrap()[1]);
-    let mut owner = String::from(&RE.captures(url).unwrap()[2]);
-    let repo = String::from(&RE.captures(url).unwrap()[3]);
-
-    if source.eq("npmjs.com") {
-        owner = npm_to_git(&repo);
+        if source.eq("npmjs.com") {
+            match npm_to_git(&repo) {
+                Ok(owner) => return Ok((owner, repo)),
+                Err(err) => return Err(err)
+            }
+        }
+        return Ok((owner, repo));
+    } else {
+        return Err("invalid URL");
     }
-
-    return (owner, repo);
 }
 
 // TODO error handling
@@ -137,18 +145,19 @@ fn package_scores(owner: &str, repo: &str, token: &str) -> Vec<f64> {
     return package_scores;
 }
 
-// TODO error handling
-fn npm_to_git(repo: &str) -> String {
-    let py_output = Command::new("python3")
-                            .arg("src/url/url.py")
-                            .arg(repo)
-                            .output()
-                            .expect("oops");
-
-    let owner = String::from_utf8(py_output.stdout)
-                       .unwrap();
-
-    return owner;
+fn npm_to_git(repo: &str) -> Result<String, &'static str> {
+    if let Ok(py_output) = Command::new("python3")
+                                   .arg("src/url/url.py")
+                                   .arg(repo)
+                                   .output() {
+        if let Ok(owner) = String::from_utf8(py_output.stdout) {
+            return Ok(owner);
+        } else {
+            return Err("string conversion failed");
+        }
+    } else {
+        return Err("unable to get npm package owner");
+    }
 }
 
 // TODO error handling
@@ -167,7 +176,7 @@ fn ramp_up_score(owner: &str, repo: &str, token: &str) -> f64 {
                                .unwrap();
 
     // return ramp_up_score;
-    return 0.8
+    return 0.8;
 }
 
 // TODO error handling
@@ -189,7 +198,7 @@ fn correctness_score(owner: &str, repo: &str, token: &str, responsive_maintainer
                                    .unwrap();
 
     // return correctness_score;
-    return 0.1
+    return 0.1;
 }
 
 // TODO error handling
@@ -208,7 +217,7 @@ fn bus_factor_score(owner: &str, repo: &str, token: &str) -> f64 {
                                   .unwrap();
 
     // return bus_factor_score;
-    return 0.2
+    return 0.2;
 }
 
 // TODO error handling
@@ -246,7 +255,7 @@ fn license_score(owner: &str, repo: &str, token: &str) -> f64 {
                                .unwrap();
 
     // return license_score;
-    return 1.0
+    return 1.0;
 }
 
 // TODO error handling
@@ -289,4 +298,86 @@ fn net_score(mut ramp_up_score: f64,
 fn read_lines<P>(filename: P) -> io::Result<io::Lines<io::BufReader<File>>> where P: AsRef<Path>, {
     let file = File::open(filename)?;
     Ok(io::BufReader::new(file).lines())
+}
+
+#[cfg(test)]
+mod tests {
+
+    #[test]
+    #[ignore = "not ready"]
+    fn test_parse_url_file() {
+
+    }
+
+    #[test]
+    #[ignore = "not ready"]
+    fn test_get_token() {
+
+    }
+
+    #[test]
+    #[ignore = "not ready"]
+    fn test_package() {
+
+    }
+
+    #[test]
+    #[ignore = "not ready"]
+    fn test_parse_url() {
+
+    }
+
+    #[test]
+    #[ignore = "not ready"]
+    fn test_package_scores() {
+
+    }
+
+    #[test]
+    #[ignore = "not ready"]
+    fn test_npm_to_git() {
+
+    }
+
+    #[test]
+    #[ignore = "not ready"]
+    fn test_ramp_up_score() {
+
+    }
+
+    #[test]
+    #[ignore = "not ready"]
+    fn test_correctness_score() {
+
+    }
+
+    #[test]
+    #[ignore = "not ready"]
+    fn test_bus_factor_score() {
+
+    }
+
+    #[test]
+    #[ignore = "not ready"]
+    fn test_responsive_maintainer_score() {
+
+    }
+
+    #[test]
+    #[ignore = "not ready"]
+    fn test_license_score() {
+
+    }
+
+    #[test]
+    #[ignore = "not ready"]
+    fn test_net_score() {
+
+    }
+
+    #[test]
+    #[ignore = "not ready"]
+    fn test_read_lines() {
+
+    }
 }
