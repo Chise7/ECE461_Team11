@@ -1,6 +1,6 @@
 import os
 import pytest
-from ..src.url.ramp_up import *
+import ramp_up
 
 USERNAME =  'PC192'
 TOKEN = os.getenv('insert token here')
@@ -11,5 +11,5 @@ Testcases = [('Chise7', 'ECE461_Team11'),('words', 'double-metaphone'),('jonschl
 @pytest.mark.correct_ramp_up
 def test_ramp_up():
     for cases in Testcases:
-        validrampup = ramp_up(cases[0], cases[1], TOKEN)
+        validrampup = ramp_up.ramp_up(cases[0], cases[1], TOKEN)
         assert validrampup >= 0
