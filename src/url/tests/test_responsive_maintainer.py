@@ -1,7 +1,7 @@
 import pytest
 from url.responsive_maintainer import *
 
-from github import Github, Repository
+from github import Github
 from url.tests.conftest import TOKEN, TEST_CASES
 
 
