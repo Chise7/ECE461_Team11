@@ -50,6 +50,6 @@ def test_searchReadme():
     name = searchReadme(api_Url, headers, git_token)
     assert(name == "mit license")
     
-    api_Url = f"https://api.github.com/repos/apache/aiflow/license"
+    api_Url = f"https://api.github.com/repos/apache/airflow/license"
     name = searchReadme(api_Url, headers, git_token)
     assert(name == "apache license 2.0")
