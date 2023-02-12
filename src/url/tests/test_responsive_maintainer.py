@@ -7,7 +7,7 @@ from url.tests.conftest import TOKEN, TEST_CASES
 
 @pytest.mark.weekly
 def test_get_weekly_subscore(git_repo: Repository.Repository):
-    print("testing get_weekly_subscore()")
+    print("\n\ntesting get_weekly_subscore()")
 
     g = Github(TOKEN)
     for url, owner, repo in TEST_CASES:
@@ -23,7 +23,7 @@ def test_get_weekly_subscore(git_repo: Repository.Repository):
 
 @pytest.mark.yearly
 def test_get_yearly_subscore():
-    print("testing get_yearly_subscore()")
+    print("\n\ntesting get_yearly_subscore()")
 
     g = Github(TOKEN)
     for url, owner, repo in TEST_CASES:
@@ -39,7 +39,7 @@ def test_get_yearly_subscore():
 
 @pytest.mark.rm_score
 def test_get_rm_score():
-    print("testing get_rm_score()")
+    print("\n\ntesting get_rm_score()")
     for url, owner, repo in TEST_CASES:
         print(f"test case: ({url}, {owner}, {repo})")
 
