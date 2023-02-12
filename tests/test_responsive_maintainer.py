@@ -1,41 +1,17 @@
 import pytest
-from ..src.responsive_maintainer.responsive_maintainer import *
+import responsive_maintainer
 
 
 USERNAME = 'realkevinkwon'
 TOKEN = 'token'
 
 
-@pytest.mark.url
-def test_parse_url():
-    owner, repo = parse_url(
-        url='https://github.com/cloudinary/cloudinary_npm'
-    )
-
-    assert owner == 'cloudinary'
-    assert repo == 'cloudinary_npm'
-
-    owner, repo = parse_url(
-        url='https://github.com/nullivex/nodist'
-    )
-
-    assert owner == 'nullivex'
-    assert repo == 'nodist'
-
-    owner, repo = parse_url(
-        url='https://github.com/lodash/lodash'
-    )
-
-    assert owner == 'lodash'
-    assert repo == 'lodash'
-
-
 @pytest.mark.subscores
 def test_get_yearly_commits_subscore():
-    session = requests.Session()
+    session = responsive_maintainer.requests.Session()
     session.auth = (USERNAME, TOKEN)
 
-    yearly_commits_subscore = get_yearly_commits_subscore(
+    yearly_commits_subscore = responsive_maintainer.get_yearly_commits_subscore(
         session=session,
         # owner='openai',
         # repo='openai-cookbook'
@@ -58,10 +34,10 @@ def test_get_yearly_commits_subscore():
 
 @pytest.mark.subscores
 def test_get_weekly_adds_and_dels_subscore():
-    session = requests.Session()
+    session = responsive_maintainer.requests.Session()
     session.auth = (USERNAME, TOKEN)
 
-    weekly_adds_and_dels_subscore = get_weekly_adds_and_dels_subscore(
+    weekly_adds_and_dels_subscore = responsive_maintainer.get_weekly_adds_and_dels_subscore(
         session=session,
         # owner='openai',
         # repo='openai-cookbook'
@@ -84,10 +60,10 @@ def test_get_weekly_adds_and_dels_subscore():
 
 @pytest.mark.score
 def test_get_responsive_maintainer_score():
-    responsive_maintainer_score = get_responsive_maintainer_score(
-        username=USERNAME,
-        token=TOKEN,
-        url='https://github.com/cloudinary/cloudinary_npm'
+    responsive_maintainer_score = responsive_maintainer.get_responsive_maintainer_score(
+        owner=USERNAME,
+        repo='',
+        token='https://github.com/cloudinary/cloudinary_npm'
     )
 
     assert type(responsive_maintainer_score) == float

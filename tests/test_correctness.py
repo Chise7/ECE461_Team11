@@ -5,7 +5,7 @@ import os
 import ctypes
 
 git_token = os.getenv('GITHUB_TOKEN')
-""""
+
 def test_get_doc():
     score = correctness.get_doc("lodash", "lodash", git_token)
     assert(score == 0.20)
@@ -62,7 +62,11 @@ def test_get_pr():
     score = correctness.get_pr("nullivex", "nodist", git_token)
     assert(score == 0.0)
     assert(score != 0.10)
-"""""
+
 
 def test_get_tags():
-    pass
+    tag_score = correctness.get_tags("https://github.com/jonschlinkert/even")
+    assert(tag_score == 0.10)
+    
+    tag_score = correctness.get_tags("https://github.com/lodash/lodash")
+    assert(tag_score == 0.0)
