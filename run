@@ -1,6 +1,5 @@
 #!/usr/bin/env bash
 
-
 # make sure these files exist
 if [ ! -f "requirements.txt" ]; then
     echo "ERROR: Missing requirements.txt"
@@ -21,7 +20,7 @@ elif [ -z ${LOG_LEVEL} ]; then
     echo "ERROR: Missing environment variable \$LOG_LEVEL"
 fi
 
-
+# handle command line arguments
 if [ $# != 1 ]; then
     echo "ERROR: Incorrect usage"
     echo "USAGE:"
