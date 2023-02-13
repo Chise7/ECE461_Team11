@@ -366,6 +366,13 @@ fn read_lines<P>(filename: P) -> io::Result<io::Lines<io::BufReader<File>>> wher
 
 #[cfg(test)]
 mod tests {
+    use std::any::type_name;
+
+    #[test]
+    #[ignore = "not ready"]
+    fn test_get_token() {
+
+    }
 
     static VALID_TEST_CASES: [(&str, &str, &str); 11] = [
         ("https://www.npmjs.com/package/even", "jonschlinkert", "even"),
@@ -397,12 +404,6 @@ mod tests {
 
     #[test]
     #[ignore = "not ready"]
-    fn test_get_token() {
-
-    }
-
-    #[test]
-    #[ignore = "not ready"]
     fn test_get_package() {
 
     }
@@ -426,16 +427,9 @@ mod tests {
     }
 
     #[test]
-    
+    #[ignore = "not ready"]
     fn test_get_ramp_up_score() {
-        for i in 0..VALID_TEST_CASES.len(){
-                if VALID_TEST_CASES[i].0.contains("github") {
-                    result = crate::get_ramp_up_score(VALID_TEST_CASES[i].0, VALID_TEST_CASES[i].1, "idk how to grab from env var");
-                    match result {
 
-                    }
-                }
-        }
     }
 
     #[test]
