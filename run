@@ -53,6 +53,8 @@ elif [ $1 == "build" ]; then
     exit 0
 elif [ $1 == "test" ]; then
     cargo build
+    make test-py-valid
+    # something for rust
     exit 0
 else
     if [ ! -f "target/release/ECE461_Team11" ]; then
