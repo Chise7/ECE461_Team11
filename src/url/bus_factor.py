@@ -4,9 +4,10 @@ from github import Github
 def get_bus_factor_score(owner, repo, token):
     repo_dir = f"{owner}/{repo}"
     g = Github(token)
-    try: repo = g.get_repo(repo_dir)
-    except: return -1.0
-    commits = repo.get_commits()
+    # try: git_repo = g.get_repo(repo_dir)
+    # except: return -1.0
+    git_repo = g.get_repo(repo_dir)
+    commits = git_repo.get_commits()
     authors = []
     for commit in commits:
         if commit is not None and commit.author is not None and commit.author.name not in authors: authors.append(commit.author.name)
