@@ -4,6 +4,7 @@ cloc:
 	cloc --exclude-dir=Repo-Analysis,.pytest_cache,.vscode,sample-files,target,venv,URL_Fields .
 clean:
 	cargo clean
+	pip uninstall -y -r requirements.txt
 
 pytest_flags=-s -v
 test_file=tests/test_cases.txt
