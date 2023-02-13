@@ -367,16 +367,18 @@ fn read_lines<P>(filename: P) -> io::Result<io::Lines<io::BufReader<File>>> wher
 #[cfg(test)]
 mod tests {
 
-    static TEST_CASES: [&str; 9] = [
-        "https://www.npmjs.com/package/even",
-        "https://github.com/jonschlinkert/even",
-        "https://github.com/SonarSource/chocolatey-packages",
-        "https://github.com/PSOPT/psopt",
-        "https://github.com/nullivex/nodist",
-        "https://www.npmjs.com/package/express",
-        "https://www.npmjs.com/package/browserify",
-        "https://github.com/cloudinary/cloudinary_npm",
-        "https://github.com/lodash/lodash"
+    static VALID_TEST_CASES: [(&str, &str, &str); 11] = [
+        ("https://www.npmjs.com/package/even", "jonschlinkert", "even"),
+        ("https://github.com/jonschlinkert/even", "jonschlinkert", "even"),
+        ("https://github.com/SonarSource/chocolatey-packages", "SonarSource", "chocolatey-packages"),
+        ("https://github.com/PSOPT/psopt", "PSOPT", "psopt"),
+        ("https://github.com/nullivex/nodist", "nullivex", "nodist"),
+        ("https://www.npmjs.com/package/express", "expressjs", "express"),
+        ("https://www.npmjs.com/package/browserify", "browserify", "browserify"),
+        ("https://github.com/cloudinary/cloudinary_npm", "cloudinary", "cloudinary_npm"),
+        ("https://github.com/lodash/lodash", "lodash", "lodash"),
+        ("https://github.com/PC192/ChubbyChecker", "PC192", "ChubbyChecker"),
+        ("https://github.com/apache/airflow", "apache", "airflow")
     ];
 
     #[test]
@@ -385,8 +387,8 @@ mod tests {
 
         match crate::parse_url_file(url_file) {
             Ok(urls) => {
-                for i in 0..TEST_CASES.len() {
-                    assert_eq!(TEST_CASES[i], urls[i]);
+                for i in 0..VALID_TEST_CASES.len() {
+                    assert_eq!(VALID_TEST_CASES[i].0, urls[i]);
                 }
             },
             Err(err) => eprintln!("{}", err)
