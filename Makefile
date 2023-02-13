@@ -8,13 +8,13 @@ clean:
 
 python=python3
 pytest_flags=-s -v
-pytest=pytest $(pytest_flags)
+pytest=pytest $(pytest_flags) --cov=src/url/
 test_file=tests/test_cases.txt
-rm_cov=--cov=src/url/responsive_maintainer.py
-bus_cov=--cov=src/url/bus_factor.py
-ramp_cov=--cov=src/url/ramp_up.py
-correct_cov=--cov=src/url/correctness.py
-license_cov=--cov=src/url/license.py
+rm_cov=
+bus_cov=
+ramp_cov=
+correct_cov=
+license_cov=
 
 # End-to-end tests
 test-run-build:
