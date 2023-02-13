@@ -1,5 +1,17 @@
 #!/usr/bin/env bash
 
+# make sure these environment variables are set
+if [ -z ${GITHUB_TOKEN} ]; then
+    echo "ERROR: Missing environment variable \$GITHUB_TOKEN"
+    exit 1
+elif [ -z ${LOG_FILE} ]; then
+    echo "ERROR: Missing environment variable \$LOG_FILE"
+    exit 1
+elif [ -z ${LOG_LEVEL} ]; then
+    echo "ERROR: Missing environment variable \$LOG_LEVEL"
+    exit 1
+fi
+
 # make sure these files exist
 if [ ! -f "requirements.txt" ]; then
     echo "ERROR: Missing requirements.txt"
@@ -7,17 +19,8 @@ if [ ! -f "requirements.txt" ]; then
 elif [ ! -f "Cargo.toml" ]; then
     echo "ERROR: Missing Cargo.toml"
     exit 1
-fi
-
-# make sure these environment variables are set
-if [ -z ${GITHUB_TOKEN} ]; then
-    echo "ERROR: Missing environment variable \$GITHUB_TOKEN"
-    exit 1
-elif [ -z ${LOG_FILE} ]; then
-    echo "ERROR: Missing environment variable \$LOG_FILE"
-
-elif [ -z ${LOG_LEVEL} ]; then
-    echo "ERROR: Missing environment variable \$LOG_LEVEL"
+elif [ ! -f $LOG_FILE ]; then
+    touch $LOG_FILE
 fi
 
 # handle command line arguments
