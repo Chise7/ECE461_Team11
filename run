@@ -41,27 +41,27 @@ elif [ $1 == "help" -o $1 == "--help" -o $1 == "-h" ]; then
 elif [ $1 == "install" ]; then
     if [ $LOG_LEVEL == 2 ]; then
         if [ -z ${VIRTUAL_ENV} ]; then
-            pip install --user --no-warn-script-location -r requirements.txt >> $LOG_FILE
-            echo "$(grep -c 'Collecting' $LOG_FILE) dependencies installed..."
+            temp=$(pip install --user --no-warn-script-location -r requirements.txt)
+            echo "$(grep -c 'Collecting' $temp) dependencies installed..."
         else
-            pip install --no-warn-script-location -r requirements.txt >> $LOG_FILE
-            echo "$(grep -c 'Collecting' $LOG_FILE) dependencies installed..."
+            temp=$(pip install --no-warn-script-location -r requirements.txt)
+            echo "$(grep -c 'Collecting' $temp) dependencies installed..."
         fi
     elif [ $LOG_LEVEL == 1 ]; then
         if [ -z ${VIRTUAL_ENV} ]; then
-            pip install --user --no-warn-script-location -r requirements.txt 2> /dev/null
-            echo "$(grep -c 'Collecting' $LOG_FILE) dependencies installed..."
+            temp=$(pip install --user --no-warn-script-location -r requirements.txt)
+            echo "$(grep -c 'Collecting' $temp) dependencies installed..."
         else
-            pip install --no-warn-script-location -r requirements.txt 2> /dev/null
-            echo "$(grep -c 'Collecting' $LOG_FILE) dependencies installed..."
+            temp=$(pip install --no-warn-script-location -r requirements.txt)
+            echo "$(grep -c 'Collecting' $temp) dependencies installed..."
         fi
     else
         if [ -z ${VIRTUAL_ENV} ]; then
-            pip install --user --no-warn-script-location -r requirements.txt &> /dev/null
-            echo "$(grep -c 'Collecting' $LOG_FILE) dependencies installed..."
+            temp=$(pip install --user --no-warn-script-location -r requirements.txt)
+            echo "$(grep -c 'Collecting' $temp) dependencies installed..."
         else
-            pip install --no-warn-script-location -r requirements.txt &> /dev/null
-            echo "$(grep -c 'Collecting' $LOG_FILE) dependencies installed..."
+            temp=$(pip install --no-warn-script-location -r requirements.txt)
+            echo "$(grep -c 'Collecting' $temp) dependencies installed..."
         fi
     fi
 elif [ $1 == "build" ]; then
