@@ -366,10 +366,30 @@ fn read_lines<P>(filename: P) -> io::Result<io::Lines<io::BufReader<File>>> wher
 #[cfg(test)]
 mod tests {
 
-    #[test]
-    #[ignore = "not ready"]
-    fn test_parse_url_file() {
+    static TEST_CASES: [&str; 9] = [
+        "https://www.npmjs.com/package/even",
+        "https://github.com/jonschlinkert/even",
+        "https://github.com/SonarSource/chocolatey-packages",
+        "https://github.com/PSOPT/psopt",
+        "https://github.com/nullivex/nodist",
+        "https://www.npmjs.com/package/express",
+        "https://www.npmjs.com/package/browserify",
+        "https://github.com/cloudinary/cloudinary_npm",
+        "https://github.com/lodash/lodash"
+    ];
 
+    #[test]
+    fn test_parse_url_file() {
+        let url_file = "tests/test_cases.txt";
+
+        match crate::parse_url_file(url_file) {
+            Ok(urls) => {
+                for i in 0..TEST_CASES.len() {
+                    assert_eq!(TEST_CASES[i], urls[i]);
+                }
+            },
+            Err(err) => eprintln!("{}", err)
+        }
     }
 
     #[test]
