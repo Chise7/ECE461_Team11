@@ -328,29 +328,29 @@ fn get_license_score(owner: &str, repo: &str, token: &str) -> Result<f64, &'stat
     }
 }
 
-fn net_score(ramp_up_score: f64,
-             correctness_score: f64,
-             bus_factor_score: f64,
-             responsive_maintainer_score: f64,
-             license_score: f64)
+fn net_score(mut ramp_up_score: f64,
+             mut correctness_score: f64,
+             mut bus_factor_score: f64,
+             mut responsive_maintainer_score: f64,
+             mut license_score: f64)
             -> f64 {
     //These lines deal with errors
     //if the scores return negative this will calculate the score with that subscore as 0
-    // if ramp_up_score < 0.0{
-    //     ramp_up_score = 0.0
-    // }
-    // if correctness_score < 0.0{
-    //     correctness_score = 0.0;
-    // }
-    // if bus_factor_score < 0.0{
-    //     bus_factor_score = 0.0;
-    // }
-    // if responsive_maintainer_score < 0.0{
-    //     responsive_maintainer_score = 0.0;
-    // }
-    // if license_score < 0.0{
-    //     license_score = 0.0;
-    // }
+    if ramp_up_score < 0.0{
+        ramp_up_score = 0.0
+    }
+    if correctness_score < 0.0{
+        correctness_score = 0.0;
+    }
+    if bus_factor_score < 0.0{
+        bus_factor_score = 0.0;
+    }
+    if responsive_maintainer_score < 0.0{
+        responsive_maintainer_score = 0.0;
+    }
+    if license_score < 0.0{
+        license_score = 0.0;
+    }
     let net_score: f64 = 
         license_score * (
             0.3 * ramp_up_score +
