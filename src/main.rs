@@ -426,9 +426,16 @@ mod tests {
     }
 
     #[test]
-    #[ignore = "not ready"]
+    
     fn test_get_ramp_up_score() {
+        for i in 0..VALID_TEST_CASES.len(){
+                if VALID_TEST_CASES[i].0.contains("github") {
+                    result = crate::get_ramp_up_score(VALID_TEST_CASES[i].0, VALID_TEST_CASES[i].1, "idk how to grab from env var");
+                    match result {
 
+                    }
+                }
+        }
     }
 
     #[test]
