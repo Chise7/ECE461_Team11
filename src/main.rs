@@ -19,7 +19,7 @@ fn main() {
 
     match parse_url_file(args[1].as_str()) {
         Ok(urls) => {
-            let mut outputs: Vec<String> = Vec::new();
+            let mut outputs: Vec<(String, i64)> = Vec::new();
 
             match get_token() {
                 Ok(token) => {
@@ -30,17 +30,20 @@ fn main() {
                                     &owner, &repo, token.as_str()
                                 ) {
                                     Ok(package_scores) => {
-                                        outputs.push(String::from(format!(
-                                            "{} {:.prec$} {:.prec$} {:.prec$} {:.prec$} {:.prec$} {:.prec$}",
-                                            url,
-                                            package_scores[5],
-                                            package_scores[0],
-                                            package_scores[1],
-                                            package_scores[2],
-                                            package_scores[3],
-                                            package_scores[4],
-                                            prec = 2,
-                                        )));
+                                        outputs.push((
+                                            String::from(format!(
+                                                "{} {:.prec$} {:.prec$} {:.prec$} {:.prec$} {:.prec$} {:.prec$}",
+                                                url,
+                                                package_scores[5],
+                                                package_scores[0],
+                                                package_scores[1],
+                                                package_scores[2],
+                                                package_scores[3],
+                                                package_scores[4],
+                                                prec = 2,
+                                            )), 
+                                            ((package_scores[5] * 1000.0).round() as i32).into()
+                                        ));
                                     },
                                     Err(err) => {
                                         eprintln!("{}", err);
@@ -54,10 +57,12 @@ fn main() {
                             }
                         }
                     }
+                    // sort packages by net score
+                    outputs.sort_by_key(|key| key.1);
 
                     println!("URL NET_SCORE RAMP_UP_SCORE CORRECTNESS_SCORE BUS_FACTOR_SCORE RESPONSIVE_MAINTAINER_SCORE LICENSE_SCORE");
                     for output in outputs.iter() {
-                        println!("{}", output);
+                        println!("{}", output.0);
                     }
                     exit(EXIT_SUCCESS);
                 },
