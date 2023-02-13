@@ -73,11 +73,11 @@ test-ramp-invalid:
 
 # License tests
 test-license:
-	$(python) -m $(pytest) -m "license" $(coverage) $(license)
+	$(python) -m $(pytest) -m "license" $(coverage) $(license_py)
 test-license-valid:
-	$(python) -m $(pytest) -m "license and valid" $(coverage) $(license)
+	$(python) -m $(pytest) -m "license and valid" $(coverage) $(license_py)
 test-license-invalid:
-	$(python) -m $(pytest) -m "license and invalid" $(coverage) $(license)
+	$(python) -m $(pytest) -m "license and invalid" $(coverage) $(license_py)
 
 # .PHONY targets
 .PHONY: tree cloc clean
