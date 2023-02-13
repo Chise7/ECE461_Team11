@@ -9,13 +9,12 @@ clean:
 python=python3
 pytest_flags=-s -v
 pytest=pytest $(pytest_flags)
-coverage=--cov=url
 test_file=tests/test_cases.txt
-rm_py=src/url/responsive_maintainer.py
-bus_py=src/url/bus_factor.py
-ramp_py=src/url/ramp_up.py
-correct_py=src/url/correctness.py
-license_py=src/url/license.py
+rm_cov=--cov=src/url/responsive_maintainer.py
+bus_cov=--cov=src/url/bus_factor.py
+ramp_cov=--cov=src/url/ramp_up.py
+correct_cov=--cov=src/url/correctness.py
+license_cov=--cov=src/url/license.py
 
 # End-to-end tests
 test-run-build:
@@ -29,55 +28,55 @@ test-run-url:
 
 # Run all python unit tests
 test-py:
-	$(python) -m $(pytest) $(coverage)
+	$(python) -m $(pytest)
 test-py-valid:
-	$(python) -m $(pytest) -m "valid" $(coverage)
+	$(python) -m $(pytest) -m "valid"
 test-py-invalid:
-	$(python) -m $(pytest) -m "invalid" $(coverage)
+	$(python) -m $(pytest) -m "invalid"
 
 # Responsive maintainer tests
 test-rm:
-	$(python) -m $(pytest) -m "rm" $(coverage) $(rm_py)
+	$(python) -m $(pytest) -m "rm" $(rm_cov)
 test-rm-valid:
-	$(python) -m $(pytest) -m "rm and valid" $(coverage) $(rm_py)
+	$(python) -m $(pytest) -m "rm and valid" $(rm_cov)
 test-rm-invalid:
-	$(python) -m $(pytest) -m "rm and invalid" $(coverage) $(rm_py)
+	$(python) -m $(pytest) -m "rm and invalid" $(rm_cov)
 test-rm-weekly:
-	$(python) -m $(pytest) -m "rm and weekly" $(coverage) $(rm_py)
+	$(python) -m $(pytest) -m "rm and weekly" $(rm_cov)
 test-rm-yearly:
-	$(python) -m $(pytest) -m "rm and yearly" $(coverage) $(rm_py)
+	$(python) -m $(pytest) -m "rm and yearly" $(rm_cov)
 
 # Bus factor tests
 test-bus:
-	$(python) -m $(pytest) -m "bus" $(coverage) $(bus_py)
+	$(python) -m $(pytest) -m "bus" $(bus_cov)
 test-bus-valid:
-	$(python) -m $(pytest) -m "bus and valid" $(coverage) $(bus_py)
+	$(python) -m $(pytest) -m "bus and valid" $(bus_cov)
 test-bus-invalid:
-	$(python) -m $(pytest) -m "bus and invalid" $(coverage) $(bus_py)
+	$(python) -m $(pytest) -m "bus and invalid" $(bus_cov)
 
 # Correctness tests
 test-correct:
-	$(python) -m $(pytest) -m "correct" $(coverage) $(correct_py)
+	$(python) -m $(pytest) -m "correct" $(correct_cov)
 test-correct-valid:
-	$(python) -m $(pytest) -m "correct and valid" $(coverage) $(correct_py)
+	$(python) -m $(pytest) -m "correct and valid" $(correct_cov)
 test-correct-invalid:
-	$(python) -m $(pytest) -m "correct and invalid" $(coverage) $(correct_py)
+	$(python) -m $(pytest) -m "correct and invalid" $(correct_cov)
 
 # Ramp up tests
 test-ramp:
-	$(python) -m $(pytest) -m "ramp" $(coverage) $(ramp_py)
+	$(python) -m $(pytest) -m "ramp" $(ramp_cov)
 test-ramp-valid:
-	$(python) -m $(pytest) -m "ramp and valid" $(coverage) $(ramp_py)
+	$(python) -m $(pytest) -m "ramp and valid" $(ramp_cov)
 test-ramp-invalid:
-	$(python) -m $(pytest) -m "ramp and invalid" $(coverage) $(ramp_py)
+	$(python) -m $(pytest) -m "ramp and invalid" $(ramp_cov)
 
 # License tests
 test-license:
-	$(python) -m $(pytest) -m "license" $(coverage) $(license_py)
+	$(python) -m $(pytest) -m "license" $(license_cov)
 test-license-valid:
-	$(python) -m $(pytest) -m "license and valid" $(coverage) $(license_py)
+	$(python) -m $(pytest) -m "license and valid" $(license_cov)
 test-license-invalid:
-	$(python) -m $(pytest) -m "license and invalid" $(coverage) $(license_py)
+	$(python) -m $(pytest) -m "license and invalid" $(license_cov)
 
 # .PHONY targets
 .PHONY: tree cloc clean
