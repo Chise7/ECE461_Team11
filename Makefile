@@ -1,12 +1,15 @@
 tree:
 	tree -I venv -I sample-files
 cloc:
-	cloc --exclude-dir=Repo-Analysis,.pytest_cache,.vscode,sample-files,target,venv,URL_Fields .
+	cloc --exclude-dir=Repo-Analysis,.$(pytest)_cache,.vscode,sample-files,target,venv,URL_Fields .
 clean:
 	cargo clean
 	pip uninstall -y -r requirements.txt
 
+python=python3
 pytest_flags=-s -v
+pytest=pytest $(pytest_flags)
+coverage=--cov=url
 test_file=tests/test_cases.txt
 
 # End-to-end tests
@@ -21,55 +24,55 @@ test-run-url:
 
 # Run all python unit tests
 test-py:
-	python3 -m pytest $(pytest_flags)
+	$(python) -m $(pytest) $(coverage)
 test-py-valid:
-	python3 -m pytest -m "valid" $(pytest_flags)
+	$(python) -m $(pytest) -m "valid" $(coverage)
 test-py-invalid:
-	python3 -m pytest -m "invalid" $(pytest_flags)
+	$(python) -m $(pytest) -m "invalid" $(coverage)
 
 # Responsive maintainer tests
 test-rm:
-	python3 -m pytest -m "rm" $(pytest_flags)
+	$(python) -m $(pytest) -m "rm" $(coverage)
 test-rm-valid:
-	python3 -m pytest -m "rm and valid" $(pytest_flags)
+	$(python) -m $(pytest) -m "rm and valid" $(coverage)
 test-rm-invalid:
-	python3 -m pytest -m "rm and invalid" $(pytest_flags)
+	$(python) -m $(pytest) -m "rm and invalid" $(coverage)
 test-rm-weekly:
-	python3 -m pytest -m "rm and weekly" $(pytest_flags)
+	$(python) -m $(pytest) -m "rm and weekly" $(coverage)
 test-rm-yearly:
-	python3 -m pytest -m "rm and yearly" $(pytest_flags)
+	$(python) -m $(pytest) -m "rm and yearly" $(coverage)
 
 # Bus factor tests
 test-bus:
-	python3 -m pytest -m "bus" $(pytest_flags)
+	$(python) -m $(pytest) -m "bus" $(coverage)
 test-bus-valid:
-	python3 -m pytest -m "bus and valid" $(pytest_flags)
+	$(python) -m $(pytest) -m "bus and valid" $(coverage)
 test-bus-invalid:
-	python3 -m pytest -m "bus and invalid" $(pytest_flags)
+	$(python) -m $(pytest) -m "bus and invalid" $(coverage)
 
 # Correctness tests
 test-correct:
-	python3 -m pytest -m "correct" $(pytest_flags)
+	$(python) -m $(pytest) -m "correct" $(coverage)
 test-correct-valid:
-	python3 -m pytest -m "correct and valid" $(pytest_flags)
+	$(python) -m $(pytest) -m "correct and valid" $(coverage)
 test-correct-invalid:
-	python3 -m pytest -m "correct and invalid" $(pytest_flags)
+	$(python) -m $(pytest) -m "correct and invalid" $(coverage)
 
 # Ramp up tests
 test-ramp:
-	python3 -m pytest -m "ramp" $(pytest_flags)
+	$(python) -m $(pytest) -m "ramp" $(coverage)
 test-ramp-valid:
-	python3 -m pytest -m "ramp and valid" $(pytest_flags)
+	$(python) -m $(pytest) -m "ramp and valid" $(coverage)
 test-ramp-invalid:
-	python3 -m pytest -m "ramp and invalid" $(pytest_flags)
+	$(python) -m $(pytest) -m "ramp and invalid" $(coverage)
 
 # License tests
 test-license:
-	python3 -m pytest -m "license" $(pytest_flags)
+	$(python) -m $(pytest) -m "license" $(coverage)
 test-license-valid:
-	python3 -m pytest -m "license and valid" $(pytest_flags)
+	$(python) -m $(pytest) -m "license and valid" $(coverage)
 test-license-invalid:
-	python3 -m pytest -m "license and invalid" $(pytest_flags)
+	$(python) -m $(pytest) -m "license and invalid" $(coverage)
 
 # .PHONY targets
 .PHONY: tree cloc clean
