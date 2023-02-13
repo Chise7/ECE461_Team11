@@ -428,36 +428,6 @@ mod tests {
 
     #[test]
     #[ignore = "not ready"]
-    fn test_get_ramp_up_score() {
-
-    }
-
-    #[test]
-    #[ignore = "not ready"]
-    fn test_get_correctness_score() {
-
-    }
-
-    #[test]
-    #[ignore = "not ready"]
-    fn test_get_bus_factor_score() {
-
-    }
-
-    #[test]
-    #[ignore = "not ready"]
-    fn test_get_responsive_maintainer_score() {
-
-    }
-
-    #[test]
-    #[ignore = "not ready"]
-    fn test_get_license_score() {
-
-    }
-
-    #[test]
-    #[ignore = "not ready"]
     fn test_net_score() {
 
     }
