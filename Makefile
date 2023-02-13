@@ -5,6 +5,7 @@ cloc:
 clean:
 	cargo clean
 	pip uninstall -y -r requirements.txt
+	rm -rf Repo-Analysis
 
 python=python3
 pytest_flags=-s -v
