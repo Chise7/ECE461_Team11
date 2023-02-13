@@ -41,10 +41,10 @@ elif [ $1 == "help" -o $1 == "--help" -o $1 == "-h" ]; then
     exit 1
 elif [ $1 == "install" ]; then
     if [ -z ${VIRTUAL_ENV} ]; then
-        pip install --user -r requirements.txt > $LOG_FILE
+        pip install --user --no-warn-script-location -r requirements.txt > $LOG_FILE
         echo "$(grep -c 'Collecting' $LOG_FILE) dependencies installed..."
     else
-        pip install -r requirements.txt > $LOG_FILE
+        pip install --no-warn-script-location -r requirements.txt > $LOG_FILE
         echo "$(grep -c 'Collecting' $LOG_FILE) dependencies installed..."
     fi
     exit 0
