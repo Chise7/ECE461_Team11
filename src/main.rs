@@ -368,12 +368,6 @@ fn read_lines<P>(filename: P) -> io::Result<io::Lines<io::BufReader<File>>> wher
 mod tests {
     use std::any::type_name;
 
-    #[test]
-    #[ignore = "not ready"]
-    fn test_get_token() {
-
-    }
-
     static VALID_TEST_CASES: [(&str, &str, &str); 11] = [
         ("https://www.npmjs.com/package/even", "jonschlinkert", "even"),
         ("https://github.com/jonschlinkert/even", "jonschlinkert", "even"),
@@ -404,12 +398,6 @@ mod tests {
 
     #[test]
     #[ignore = "not ready"]
-    fn test_get_package() {
-
-    }
-
-    #[test]
-    #[ignore = "not ready"]
     fn test_parse_url() {
 
     }
@@ -422,19 +410,7 @@ mod tests {
 
     #[test]
     #[ignore = "not ready"]
-    fn test_npm_to_git() {
-
-    }
-
-    #[test]
-    #[ignore = "not ready"]
     fn test_net_score() {
-
-    }
-
-    #[test]
-    #[ignore = "not ready"]
-    fn test_read_lines() {
 
     }
 }
