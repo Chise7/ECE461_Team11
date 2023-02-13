@@ -16,7 +16,6 @@ def test_get_ramp_up_score_valid():
         assert ramp_up_score >= 0.0
         assert ramp_up_score <= 1.0
 
-
 @pytest.mark.invalid
 @pytest.mark.ramp
 def test_get_ramp_up_score_invalid():

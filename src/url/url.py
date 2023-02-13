@@ -17,6 +17,6 @@ def npm_to_git(repo):
                 return git_owner
     return "guh"
 
-if __name__ == "__main__":
+if __name__ == "__main__": # pragma: no cover
     owner = npm_to_git(sys.argv[1])
     print(owner, end="")
