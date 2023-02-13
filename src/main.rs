@@ -55,6 +55,7 @@ fn main() {
                         }
                     }
 
+                    println!("URL NET_SCORE RAMP_UP_SCORE CORRECTNESS_SCORE BUS_FACTOR_SCORE RESPONSIVE_MAINTAINER_SCORE LICENSE_SCORE");
                     for output in outputs.iter() {
                         println!("{}", output);
                     }
