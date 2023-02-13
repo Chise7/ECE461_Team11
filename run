@@ -41,9 +41,9 @@ elif [ $1 == "help" -o $1 == "--help" -o $1 == "-h" ]; then
     exit 1
 elif [ $1 == "install" ]; then
     if [ -z ${VIRTUAL_ENV} ]; then
-        pip install --user -r requirements.txt
+        echo "$(pip install --user -r requirements.txt | grep -c 'Collecting') dependencies installed..."
     else
-        pip install -r requirements.txt
+        echo "$(pip install -r requirements.txt | grep -c 'Collecting') dependencies installed..."
     fi
     exit 0
 elif [ $1 == "build" ]; then
