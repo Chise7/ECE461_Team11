@@ -10,11 +10,6 @@ python=python3
 pytest_flags=-s -v
 pytest=pytest $(pytest_flags) --cov=src/url/
 test_file=tests/test_cases.txt
-rm_cov=
-bus_cov=
-ramp_cov=
-correct_cov=
-license_cov=
 
 # End-to-end tests
 test-run-build:
@@ -36,47 +31,47 @@ test-py-invalid:
 
 # Responsive maintainer tests
 test-rm:
-	$(python) -m $(pytest) -m "rm" $(rm_cov)
+	$(python) -m $(pytest) -m "rm"
 test-rm-valid:
-	$(python) -m $(pytest) -m "rm and valid" $(rm_cov)
+	$(python) -m $(pytest) -m "rm and valid"
 test-rm-invalid:
-	$(python) -m $(pytest) -m "rm and invalid" $(rm_cov)
+	$(python) -m $(pytest) -m "rm and invalid"
 test-rm-weekly:
-	$(python) -m $(pytest) -m "rm and weekly" $(rm_cov)
+	$(python) -m $(pytest) -m "rm and weekly"
 test-rm-yearly:
-	$(python) -m $(pytest) -m "rm and yearly" $(rm_cov)
+	$(python) -m $(pytest) -m "rm and yearly"
 
 # Bus factor tests
 test-bus:
-	$(python) -m $(pytest) -m "bus" $(bus_cov)
+	$(python) -m $(pytest) -m "bus"
 test-bus-valid:
-	$(python) -m $(pytest) -m "bus and valid" $(bus_cov)
+	$(python) -m $(pytest) -m "bus and valid"
 test-bus-invalid:
-	$(python) -m $(pytest) -m "bus and invalid" $(bus_cov)
+	$(python) -m $(pytest) -m "bus and invalid"
 
 # Correctness tests
 test-correct:
-	$(python) -m $(pytest) -m "correct" $(correct_cov)
+	$(python) -m $(pytest) -m "correct"
 test-correct-valid:
-	$(python) -m $(pytest) -m "correct and valid" $(correct_cov)
+	$(python) -m $(pytest) -m "correct and valid"
 test-correct-invalid:
-	$(python) -m $(pytest) -m "correct and invalid" $(correct_cov)
+	$(python) -m $(pytest) -m "correct and invalid"
 
 # Ramp up tests
 test-ramp:
-	$(python) -m $(pytest) -m "ramp" $(ramp_cov)
+	$(python) -m $(pytest) -m "ramp"
 test-ramp-valid:
-	$(python) -m $(pytest) -m "ramp and valid" $(ramp_cov)
+	$(python) -m $(pytest) -m "ramp and valid"
 test-ramp-invalid:
-	$(python) -m $(pytest) -m "ramp and invalid" $(ramp_cov)
+	$(python) -m $(pytest) -m "ramp and invalid"
 
 # License tests
 test-license:
-	$(python) -m $(pytest) -m "license" $(license_cov)
+	$(python) -m $(pytest) -m "license"
 test-license-valid:
-	$(python) -m $(pytest) -m "license and valid" $(license_cov)
+	$(python) -m $(pytest) -m "license and valid"
 test-license-invalid:
-	$(python) -m $(pytest) -m "license and invalid" $(license_cov)
+	$(python) -m $(pytest) -m "license and invalid"
 
 # .PHONY targets
 .PHONY: tree cloc clean
