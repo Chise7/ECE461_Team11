@@ -40,7 +40,8 @@ elif [ $1 == "help" -o $1 == "--help" -o $1 == "-h" ]; then
     echo -e "\t./run <URL_FILE>"
     exit 1
 elif [ $1 == "install" ]; then
-    pip install --user -r requirements.txt
+    # pip install --user -r requirements.txt
+    pip install -r requirements.txt # if using venv
     exit 0
 elif [ $1 == "build" ]; then
     cargo build --release
