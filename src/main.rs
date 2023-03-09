@@ -31,8 +31,15 @@ fn main() {
                                 ) {
                                     Ok(package_scores) => {
                                         outputs.push((
-                                            String::from(format!(
-                                                "{} {:.prec$} {:.prec$} {:.prec$} {:.prec$} {:.prec$} {:.prec$}",
+                                            String::from(format!("{{\
+                                                    \"URL\":\"{}\", \
+                                                    \"NET_SCORE\":{:.prec$}, \
+                                                    \"RAMP_UP_SCORE\":{:.prec$}, \
+                                                    \"CORRECTNESS_SCORE\":{:.prec$}, \
+                                                    \"BUS_FACTOR_SCORE\":{:.prec$}, \
+                                                    \"RESPONSIVE_MAINTAINER_SCORE\":{:.prec$}, \
+                                                    \"LICENSE_SCORE\":{:.prec$}\
+                                                }}",
                                                 url,
                                                 package_scores[5],
                                                 package_scores[0],
