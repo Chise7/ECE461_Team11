@@ -8,7 +8,8 @@ elif [ -z ${LOG_FILE} ]; then
     echo "ERROR: Missing environment variable \$LOG_FILE"
     exit 1
 elif [ -z ${LOG_LEVEL} ]; then
-    export LOG_LEVEL=0 &> /dev/null
+    echo "ERROR: Missing environment variable \$LOG_LEVEL"
+    exit 1
 fi
 
 # make sure these files exist
@@ -39,45 +40,22 @@ elif [ $1 == "help" -o $1 == "--help" -o $1 == "-h" ]; then
     echo -e "\t./run <URL_FILE>"
     exit 1
 elif [ $1 == "install" ]; then
-    if [ $LOG_LEVEL == 2 ]; then
-        if [ -z ${VIRTUAL_ENV} ]; then
-            temp=$(pip install --user --no-warn-script-location -r requirements.txt)
-            echo "$(grep -c 'Collecting' $temp) dependencies installed..."
-        else
-            temp=$(pip install --no-warn-script-location -r requirements.txt)
-            echo "$(grep -c 'Collecting' $temp) dependencies installed..."
-        fi
-    elif [ $LOG_LEVEL == 1 ]; then
-        if [ -z ${VIRTUAL_ENV} ]; then
-            temp=$(pip install --user --no-warn-script-location -r requirements.txt)
-            echo "$(grep -c 'Collecting' $temp) dependencies installed..."
-        else
-            temp=$(pip install --no-warn-script-location -r requirements.txt)
-            echo "$(grep -c 'Collecting' $temp) dependencies installed..."
-        fi
+    if [ -z ${VIRTUAL_ENV} ]; then
+        pip install --user --no-warn-script-location -r requirements.txt > temp
+        echo $(grep -c 'Collecting' temp) dependencies installed...
+        rm -f temp &> /dev/null
     else
-        if [ -z ${VIRTUAL_ENV} ]; then
-            temp=$(pip install --user --no-warn-script-location -r requirements.txt)
-            echo "$(grep -c 'Collecting' $temp) dependencies installed..."
-        else
-            temp=$(pip install --no-warn-script-location -r requirements.txt)
-            echo "$(grep -c 'Collecting' $temp) dependencies installed..."
-        fi
+        pip install --no-warn-script-location -r requirements.txt > temp
+        echo $(grep -c 'Collecting' temp) dependencies installed...
+        rm -f temp &> /dev/null
     fi
+    exit 0
 elif [ $1 == "build" ]; then
     cargo build --release >> $LOG_FILE
     exit 0
 elif [ $1 == "test" ]; then
-    if [ $LOG_LEVEL == 2 ]; then
-        cargo build >> $LOG_FILE
-        make test-py-valid >> $LOG_FILE
-    elif [ $LOG_LEVEL == 1 ]; then
-        cargo build 2> /dev/null
-        make test-py-valid 2> /dev/null
-    else
-        cargo build &> /dev/null
-        make test-py-valid &> /dev/null
-    fi
+    cargo build >> $LOG_FILE
+    make test-py-valid >> $LOG_FILE
 
     passed=$(grep -c "PASSED" ${LOG_FILE})
     failed=$(grep -c "FAILED" ${LOG_FILE})
@@ -95,12 +73,7 @@ else
     if [ ! -f "target/release/ECE461_Team11" ]; then
         cargo build --release >> $LOG_FILE
     fi
-    if [ $LOG_LEVEL == 2 ]; then
-        ./target/release/ECE461_Team11 $1 >> $LOG_FILE
-    elif [ $LOG_LEVEL == 1 ]; then
-        ./target/release/ECE461_Team11 $1 2> /dev/null
-    else
-        ./target/release/ECE461_Team11 $1 &> /dev/null
-    fi
+
+    ./target/release/ECE461_Team11 $1
     exit 0
 fi
