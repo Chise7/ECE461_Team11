@@ -38,8 +38,8 @@ def get_yearly_subscore(git_repo: Repository.Repository) -> float:
 
 def get_rm_score(owner: str, repo: str, token: str) -> float:
     g = Github(token)
-    git_repo = g.get_repo(f"{owner}/{repo}")
-
+    try: git_repo = g.get_repo(f"{owner}/{repo}")
+    except: return 0.0
     yearly_subscore = get_yearly_subscore(git_repo)
     weekly_subscore = get_weekly_subscore(git_repo)
 
