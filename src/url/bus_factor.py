@@ -4,15 +4,14 @@ from github import Github
 def get_bus_factor_score(owner, repo, token):
     repo_dir = f"{owner}/{repo}"
     g = Github(token)
+    authors = []
     try: git_repo = g.get_repo(repo_dir)
     except: return 0.0
     commits = git_repo.get_commits()
-    for commit in commits and commit.author.login not in authors:
-        authors.append(commit.author.login)
-    # authors = []
-    # for commit in commits:
-    #     if commit is not None and commit.author is not None and commit.author.name not in authors: authors.append(commit.author.name)
-    #     if len(authors) == 100: return 1.0
+    for commit in commits:
+        try: authors.append(commit.author.login)
+        except: pass
+    authors = list(dict.fromkeys(authors))
 
     num_of_authors = len(authors)
     if num_of_authors >= 5 and num_of_authors < 100: return 0.75
